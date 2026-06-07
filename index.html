@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Science Claw Machine V3</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+</head>
+
+<body>
+
+<!-- LOGIN SCREEN -->
+
+<div id="registration-screen" class="screen">
+
+    <div class="portal-box">
+
+        <h1>SCIENCE CLAW MACHINE</h1>
+        <p class="subtitle">
+            Learning Through Play
+        </p>
+
+        <input
+            id="student-name"
+            placeholder="Student Name"
+        >
+
+        <select id="student-class">
+
+            <option value="P3">
+                Primary 3
+            </option>
+
+            <option value="P4">
+                Primary 4
+            </option>
+
+            <option value="P5">
+                Primary 5
+            </option>
+
+            <option value="P6">
+                Primary 6
+            </option>
+
+        </select>
+
+        <button onclick="authorizeStudentLogin()">
+
+            Enter Machine
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- GAME CANVAS -->
+
+<div id="canvas-container"></div>
+
+
+<!-- HUD -->
+
+<div id="ui-layer">
+
+    <!-- LEFT HUD -->
+
+    <div class="hud left">
+
+        <h2>Science Claw</h2>
+
+        <p id="player-hud-tag">
+            Guest
+        </p>
+
+        <p>
+            Credits:
+            <span id="credit-display">
+                0
+            </span>
+        </p>
+
+        <p>
+            Streak:
+            <span id="streak-display">
+                0
+            </span>
+        </p>
+
+        <p>
+            Prizes:
+            <span id="prizes-display">
+                0
+            </span>
+        </p>
+
+        <p>
+            Accuracy:
+            <span id="accuracy-display">
+                0%
+            </span>
+        </p>
+
+        <button onclick="showTopUpMenu()">
+            Earn Credits
+        </button>
+
+        <button
+            id="btn-start"
+            disabled
+            onclick="startGame()">
+
+            Start Game
+        </button>
+
+        <button onclick="saveGameReport()">
+
+            Save Progress
+
+        </button>
+
+    </div>
+
+
+    <!-- RIGHT HUD -->
+
+    <div class="hud right">
+
+        <h3>Camera</h3>
+
+        <button onclick="setCamera('front')">
+            Front
+        </button>
+
+        <button onclick="setCamera('side')">
+            Side
+        </button>
+
+        <button onclick="setCamera('top')">
+            Top
+        </button>
+
+    </div>
+
+
+    <!-- BOTTOM -->
+
+    <div class="hud bottom">
+
+        <div id="timer-display">
+
+            30s
+
+        </div>
+
+        <button
+            id="btn-drop"
+            onclick="dropClaw()">
+
+            Drop Claw
+
+        </button>
+
+        <button
+            id="btn-release"
+            style="display:none"
+            onclick="releaseCatch()">
+
+            Release Prize
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- TOP UP -->
+
+<div id="topup-modal" class="modal">
+
+    <h2>
+
+        Earn Credits
+
+    </h2>
+
+    <p>
+
+        Answer Science Questions
+
+    </p>
+
+    <button onclick="startQuiz(5,5)">
+        5 Questions
+    </button>
+
+    <button onclick="startQuiz(10,13)">
+        10 Questions
+    </button>
+
+    <button onclick="startQuiz(20,30)">
+        20 Questions
+    </button>
+
+</div>
+
+
+
+<!-- QUIZ -->
+
+<div id="quiz-modal" class="modal">
+
+    <h2 id="quiz-progress">
+
+        Question 1
+
+    </h2>
+
+    <div id="question-text">
+
+    </div>
+
+    <div id="quiz-area">
+
+    </div>
+
+    <button onclick="submitAnswer()">
+
+        Submit
+
+    </button>
+
+    <button
+        id="btn-next-q"
+        style="display:none"
+        onclick="nextQuestion()">
+
+        Next
+
+    </button>
+
+</div>
+
+
+
+<!-- MESSAGE -->
+
+<div id="message-box">
+
+</div>
+
+
+
+<!-- ADMIN -->
+
+<div id="admin-panel" class="modal">
+
+    <h2>
+
+        Teacher Tools
+
+    </h2>
+
+    <button onclick="openQuestionEditor()">
+
+        Question Bank
+
+    </button>
+
+    <button onclick="exportAnalytics()">
+
+        Export Analytics
+
+    </button>
+
+</div>
+
+
+
+<script src="questions.js"></script>
+
+<script src="analytics.js"></script>
+
+<script src="backend.js"></script>
+
+<script src="quiz.js"></script>
+
+<script src="game.js"></script>
+
+<script src="ui.js"></script>
+
+</body>
+
+</html>
