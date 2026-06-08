@@ -18,6 +18,18 @@ const GAME_HEIGHT = 500;
 
 const GRAB_CHANCE = 0.65;
 
+const SCIENCE_ITEMS = [
+
+{emoji:"🧲",name:"Magnet"},
+{emoji:"🧪",name:"Test Tube"},
+{emoji:"🌡️",name:"Thermometer"},
+{emoji:"🔋",name:"Battery"},
+{emoji:"🌱",name:"Plant"},
+{emoji:"💡",name:"Bulb"},
+{emoji:"🐻",name:"Animal"}
+
+];
+
 
 
 function initGame(){
@@ -46,19 +58,21 @@ background:#111;
 
 `;
 
-prizes = [];
+prizes=[];
 
-const canvas =
+const canvas=
 
 document.getElementById(
 "gameCanvas"
 );
 
-const ctx =
+const ctx=
 
 canvas.getContext(
 "2d"
 );
+
+ctx.font="28px Arial";
 
 for(
 
@@ -70,41 +84,21 @@ i++
 
 ){
 
-let rarity = "common";
+const item=
 
-let value = 1;
+SCIENCE_ITEMS[
 
-let color = "gold";
+Math.floor(
 
-const roll = Math.random();
+Math.random()
 
-if(
+*
 
-roll > 0.85
+SCIENCE_ITEMS.length
 
-){
+)
 
-rarity="legend";
-
-value=5;
-
-color="cyan";
-
-}
-
-else if(
-
-roll > 0.60
-
-){
-
-rarity="rare";
-
-value=3;
-
-color="violet";
-
-}
+];
 
 prizes.push({
 
@@ -120,11 +114,9 @@ caught:false,
 
 grabbed:false,
 
-rarity,
+emoji:item.emoji,
 
-value,
-
-color
+name:item.name
 
 });
 
@@ -160,11 +152,7 @@ dropping ||
 
 rising
 
-){
-
-return;
-
-}
+) return;
 
 if(
 
@@ -186,7 +174,7 @@ clawX+=25;
 
 }
 
-clawX =
+clawX=
 
 Math.max(
 
@@ -270,7 +258,7 @@ p.caught
 
 ) continue;
 
-const dx =
+const dx=
 
 Math.abs(
 
@@ -278,7 +266,7 @@ p.x-clawX
 
 );
 
-const dy =
+const dy=
 
 Math.abs(
 
@@ -322,11 +310,7 @@ return;
 
 function updateClaw(){
 
-if(
-
-dropping
-
-){
+if(dropping){
 
 clawY+=8;
 
@@ -346,13 +330,7 @@ rising=true;
 
 }
 
-
-
-if(
-
-rising
-
-){
+if(rising){
 
 clawY-=8;
 
@@ -398,7 +376,7 @@ p.grabbed=false;
 
 p.caught=true;
 
-player.prizes += p.value;
+player.prizes++;
 
 player.streak++;
 
@@ -408,7 +386,7 @@ saveLocal();
 
 setMessage(
 
-`${p.rarity.toUpperCase()} +${p.value}`
+`Caught ${p.name}`
 
 );
 
@@ -446,10 +424,10 @@ ctx.fillStyle="#111";
 
 ctx.fillRect(
 
-0,
-0,
+0,0,
 
 GAME_WIDTH,
+
 GAME_HEIGHT
 
 );
@@ -460,11 +438,9 @@ ctx.lineWidth=8;
 
 ctx.strokeRect(
 
-10,
-10,
+10,10,
 
-780,
-480
+780,480
 
 );
 
@@ -472,11 +448,9 @@ ctx.fillStyle="#444";
 
 ctx.fillRect(
 
-0,
-440,
+0,440,
 
-800,
-60
+800,60
 
 );
 
@@ -518,35 +492,13 @@ clawY,
 
 );
 
-ctx.fillRect(
-
-clawX-15,
-
-clawY+15,
-
-5,
-
-20
-
-);
-
-ctx.fillRect(
-
-clawX+10,
-
-clawY+15,
-
-5,
-
-20
-
-);
-
 }
 
 
 
 function drawPrizes(ctx){
+
+ctx.font="28px Arial";
 
 for(
 
@@ -558,13 +510,9 @@ if(
 
 p.caught
 
-){
+) continue;
 
-continue;
-
-}
-
-let drawY = p.y;
+let drawY=p.y;
 
 if(
 
@@ -572,31 +520,23 @@ p.grabbed
 
 ){
 
-drawY = clawY + 35;
+drawY=
 
-p.x = clawX;
+clawY+35;
+
+p.x=clawX;
 
 }
 
-ctx.fillStyle=p.color;
+ctx.fillText(
 
-ctx.beginPath();
-
-ctx.arc(
+p.emoji,
 
 p.x,
 
-drawY,
-
-18,
-
-0,
-
-Math.PI*2
+drawY
 
 );
-
-ctx.fill();
 
 }
 
@@ -618,7 +558,7 @@ return;
 
 ctx.fillStyle="white";
 
-ctx.font="28px Arial";
+ctx.font="30px Arial";
 
 ctx.textAlign="center";
 
