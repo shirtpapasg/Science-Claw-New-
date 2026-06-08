@@ -14,7 +14,9 @@ questionsCorrect: 0,
 
 questionsAttempted: 0,
 
-topicStats: {}
+topicStats: {},
+
+collection: {}
 
 };
 
@@ -36,14 +38,12 @@ document.getElementById(
 
 if(
 
-player.name.trim() === ""
+player.name.trim()===""
 
 ){
 
 alert(
-
 "Enter your name"
-
 );
 
 return;
@@ -91,11 +91,7 @@ localStorage.getItem(
 "sciencePlayer"
 );
 
-if(
-
-!data
-
-){
+if(!data){
 
 return;
 
@@ -105,19 +101,9 @@ player =
 
 JSON.parse(data);
 
-
-
 player.topicStats ??= {};
 
-player.questionsCorrect ??= 0;
-
-player.questionsAttempted ??= 0;
-
-player.prizes ??= 0;
-
-player.streak ??= 0;
-
-
+player.collection ??= {};
 
 document
 .getElementById(
@@ -137,9 +123,7 @@ initGame();
 function resetPlayer(){
 
 localStorage.removeItem(
-
 "sciencePlayer"
-
 );
 
 location.reload();
@@ -148,7 +132,7 @@ location.reload();
 
 
 
-window.onload = ()=>{
+window.onload=()=>{
 
 loadLocal();
 
