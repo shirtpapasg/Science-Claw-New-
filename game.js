@@ -1,4 +1,6 @@
-let clawX = 300;
+let clawX = 400;
+
+let clawY = 0;
 
 let dropping = false;
 
@@ -23,10 +25,18 @@ container.innerHTML =
 <canvas
 id="gameCanvas"
 width="800"
-height="500">
+height="500"
+style="
+border:2px solid white;
+display:block;
+margin:20px auto;
+background:#111;
+">
 </canvas>
 
 `;
+
+prizes = [];
 
 const canvas =
 
@@ -41,7 +51,9 @@ canvas.getContext("2d");
 for(
 
 let i=0;
+
 i<10;
+
 i++
 
 ){
@@ -50,19 +62,25 @@ prizes.push({
 
 x:
 
-Math.random()*700+40,
+Math.random()*700 + 50,
 
 y:
 
-350+
-
-Math.random()*80,
+360 + Math.random()*70,
 
 caught:false
 
 });
 
 }
+
+document.removeEventListener(
+
+"keydown",
+
+handleControls
+
+);
 
 document.addEventListener(
 
@@ -76,13 +94,14 @@ loop(ctx);
 
 }
 
+
 function handleControls(e){
 
 if(dropping) return;
 
 if(
 
-e.key==="ArrowLeft"
+e.key === "ArrowLeft"
 
 ){
 
@@ -92,7 +111,7 @@ clawX -= 25;
 
 if(
 
-e.key==="ArrowRight"
+e.key === "ArrowRight"
 
 ){
 
@@ -100,9 +119,25 @@ clawX += 25;
 
 }
 
+clawX =
+
+Math.max(
+
+30,
+
+Math.min(
+
+770,
+
+clawX
+
+)
+
+);
+
 if(
 
-e.key===" "
+e.key === " "
 
 ){
 
@@ -112,16 +147,19 @@ dropClaw();
 
 }
 
+
 function dropClaw(){
 
 if(
 
-player.credits<=0
+player.credits <= 0
 
 ){
 
 alert(
+
 "No credits"
+
 );
 
 return;
@@ -138,13 +176,112 @@ dropping = true;
 
 }
 
-function loop(ctx){
 
-requestAnimationFrame(
-()=>loop(ctx)
+function checkCatch(){
+
+for(
+
+const p of prizes
+
+){
+
+if(
+
+p.caught
+
+) continue;
+
+const dist =
+
+Math.abs(
+
+p.x - clawX
+
 );
 
-ctx.clearRect(
+if(
+
+dist < 30
+
+&&
+
+Math.abs(
+
+p.y - clawY
+
+) < 35
+
+){
+
+p.caught = true;
+
+player.prizes++;
+
+alert(
+
+"You caught one!"
+
+);
+
+updateHUD();
+
+saveLocal();
+
+return;
+
+}
+
+}
+
+}
+
+
+function updateClaw(){
+
+if(
+
+dropping
+
+){
+
+clawY += 8;
+
+if(
+
+clawY > 420
+
+){
+
+checkCatch();
+
+dropping = false;
+
+}
+
+}
+
+else{
+
+if(
+
+clawY > 0
+
+){
+
+clawY -= 8;
+
+}
+
+}
+
+}
+
+
+function drawMachine(ctx){
+
+ctx.fillStyle = "#111";
+
+ctx.fillRect(
 
 0,
 0,
@@ -154,27 +291,62 @@ GAME_HEIGHT
 
 );
 
-ctx.fillStyle="white";
+ctx.fillStyle = "#444";
 
 ctx.fillRect(
 
-clawX,
 0,
+440,
 
-10,
-150
+GAME_WIDTH,
+60
 
 );
+
+ctx.strokeStyle = "white";
+
+ctx.lineWidth = 3;
+
+ctx.beginPath();
+
+ctx.moveTo(
+
+clawX,
+
+0
+
+);
+
+ctx.lineTo(
+
+clawX,
+
+clawY
+
+);
+
+ctx.stroke();
+
+ctx.fillStyle = "white";
 
 ctx.fillRect(
 
 clawX-20,
-150,
 
-50,
-20
+clawY,
+
+40,
+
+15
 
 );
+
+}
+
+
+function drawPrizes(ctx){
+
+ctx.fillStyle = "gold";
 
 for(
 
@@ -183,7 +355,9 @@ const p of prizes
 ){
 
 if(
+
 p.caught
+
 ) continue;
 
 ctx.beginPath();
@@ -191,6 +365,7 @@ ctx.beginPath();
 ctx.arc(
 
 p.x,
+
 p.y,
 
 18,
@@ -205,18 +380,21 @@ ctx.fill();
 
 }
 
-if(
+}
 
-dropping
 
-){
+function loop(ctx){
 
-const claw =
+requestAnimationFrame(
 
-document.querySelector(
-"#gameCanvas"
+()=>loop(ctx)
+
 );
 
-}
+updateClaw();
+
+drawMachine(ctx);
+
+drawPrizes(ctx);
 
 }
