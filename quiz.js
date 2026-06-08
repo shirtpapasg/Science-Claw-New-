@@ -1,6 +1,8 @@
-let currentReward = 0;
+let currentReward=0;
 
-let currentQuestion = null;
+let currentQuestion=null;
+
+
 
 function showTopUpMenu(){
 
@@ -23,7 +25,7 @@ reward
 
 ){
 
-currentReward = reward;
+currentReward=reward;
 
 document
 .getElementById(
@@ -53,7 +55,7 @@ QUESTIONS[
 player.studentClass
 ];
 
-currentQuestion =
+currentQuestion=
 
 pool[
 
@@ -71,7 +73,7 @@ document
 .getElementById(
 "question-title"
 )
-.innerText =
+.innerText=
 
 currentQuestion.topic;
 
@@ -79,11 +81,11 @@ document
 .getElementById(
 "question-text"
 )
-.innerText =
+.innerText=
 
 currentQuestion.question;
 
-const area =
+const area=
 
 document
 .getElementById(
@@ -106,8 +108,7 @@ area.innerHTML +=
 <input
 type="radio"
 name="ans"
-value="${option}"
->
+value="${option}">
 
 ${option}
 
@@ -127,7 +128,7 @@ ${option}
 
 function submitAnswer(){
 
-const selected =
+const selected=
 
 document.querySelector(
 
@@ -153,11 +154,33 @@ return;
 
 player.questionsAttempted++;
 
+const topic=
+
+currentQuestion.topic;
+
 if(
 
-selected.value
+!player.topicStats[topic]
 
-===
+){
+
+player.topicStats[topic]={
+
+attempted:0,
+
+correct:0
+
+};
+
+}
+
+player.topicStats[
+topic
+].attempted++;
+
+if(
+
+selected.value===
 
 currentQuestion.correct
 
@@ -165,11 +188,13 @@ currentQuestion.correct
 
 player.questionsCorrect++;
 
-player.credits +=
-
-currentReward;
+player.credits+=currentReward;
 
 player.streak++;
+
+player.topicStats[
+topic
+].correct++;
 
 }
 
