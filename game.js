@@ -8,11 +8,16 @@ let rising = false;
 
 let prizes = [];
 
+let floatingText = "";
+
+let floatingTimer = 0;
+
 const GAME_WIDTH = 800;
 
 const GAME_HEIGHT = 500;
 
 const GRAB_CHANCE = 0.65;
+
 
 
 function initGame(){
@@ -32,7 +37,7 @@ id="gameCanvas"
 width="800"
 height="500"
 style="
-border:2px solid white;
+border:4px solid white;
 display:block;
 margin:20px auto;
 background:#111;
@@ -65,41 +70,39 @@ i++
 
 ){
 
-const rarityRoll =
-
-Math.random();
-
 let rarity = "common";
 
 let value = 1;
 
 let color = "gold";
 
+const roll = Math.random();
+
 if(
 
-rarityRoll > 0.85
+roll > 0.85
 
 ){
 
-rarity = "legend";
+rarity="legend";
 
-value = 5;
+value=5;
 
-color = "cyan";
+color="cyan";
 
 }
 
 else if(
 
-rarityRoll > 0.60
+roll > 0.60
 
 ){
 
-rarity = "rare";
+rarity="rare";
 
-value = 3;
+value=3;
 
-color = "violet";
+color="violet";
 
 }
 
@@ -107,11 +110,11 @@ prizes.push({
 
 x:
 
-Math.random()*700 + 50,
+Math.random()*700+50,
 
 y:
 
-360 + Math.random()*70,
+350+Math.random()*70,
 
 caught:false,
 
@@ -169,7 +172,7 @@ e.key==="ArrowLeft"
 
 ){
 
-clawX -= 25;
+clawX-=25;
 
 }
 
@@ -179,7 +182,7 @@ e.key==="ArrowRight"
 
 ){
 
-clawX += 25;
+clawX+=25;
 
 }
 
@@ -193,7 +196,9 @@ Math.min(
 
 760,
 
-clawX)
+clawX
+
+)
 
 );
 
@@ -215,13 +220,13 @@ function dropClaw(){
 
 if(
 
-player.credits <= 0
+player.credits<=0
 
 ){
 
-alert(
+setMessage(
 
-"Earn more credits"
+"NO CREDITS"
 
 );
 
@@ -235,7 +240,17 @@ updateHUD();
 
 saveLocal();
 
-dropping = true;
+dropping=true;
+
+}
+
+
+
+function setMessage(text){
+
+floatingText=text;
+
+floatingTimer=120;
 
 }
 
@@ -253,17 +268,13 @@ if(
 
 p.caught
 
-){
-
-continue;
-
-}
+) continue;
 
 const dx =
 
 Math.abs(
 
-p.x - clawX
+p.x-clawX
 
 );
 
@@ -271,17 +282,17 @@ const dy =
 
 Math.abs(
 
-p.y - clawY
+p.y-clawY
 
 );
 
 if(
 
-dx < 28
+dx<28
 
 &&
 
-dy < 30
+dy<30
 
 ){
 
@@ -295,7 +306,7 @@ GRAB_CHANCE
 
 ){
 
-p.grabbed = true;
+p.grabbed=true;
 
 }
 
@@ -317,19 +328,19 @@ dropping
 
 ){
 
-clawY += 8;
+clawY+=8;
 
 checkCatch();
 
 if(
 
-clawY >= 420
+clawY>=420
 
 ){
 
-dropping = false;
+dropping=false;
 
-rising = true;
+rising=true;
 
 }
 
@@ -343,17 +354,17 @@ rising
 
 ){
 
-clawY -= 8;
+clawY-=8;
 
 if(
 
-clawY <= 0
+clawY<=0
 
 ){
 
-clawY = 0;
+clawY=0;
 
-rising = false;
+rising=false;
 
 completeGrab();
 
@@ -367,7 +378,7 @@ completeGrab();
 
 function completeGrab(){
 
-let success = false;
+let success=false;
 
 for(
 
@@ -381,11 +392,11 @@ p.grabbed
 
 ){
 
-success = true;
+success=true;
 
-p.grabbed = false;
+p.grabbed=false;
 
-p.caught = true;
+p.caught=true;
 
 player.prizes += p.value;
 
@@ -395,9 +406,9 @@ updateHUD();
 
 saveLocal();
 
-alert(
+setMessage(
 
-`${p.rarity.toUpperCase()} prize +${p.value}`
+`${p.rarity.toUpperCase()} +${p.value}`
 
 );
 
@@ -413,9 +424,15 @@ if(
 
 ){
 
-player.streak = 0;
+player.streak=0;
 
 updateHUD();
+
+setMessage(
+
+"MISS"
+
+);
 
 }
 
@@ -437,6 +454,20 @@ GAME_HEIGHT
 
 );
 
+ctx.strokeStyle="#666";
+
+ctx.lineWidth=8;
+
+ctx.strokeRect(
+
+10,
+10,
+
+780,
+480
+
+);
+
 ctx.fillStyle="#444";
 
 ctx.fillRect(
@@ -444,7 +475,7 @@ ctx.fillRect(
 0,
 440,
 
-GAME_WIDTH,
+800,
 60
 
 );
@@ -459,7 +490,7 @@ ctx.moveTo(
 
 clawX,
 
-0
+20
 
 );
 
@@ -484,6 +515,30 @@ clawY,
 40,
 
 15
+
+);
+
+ctx.fillRect(
+
+clawX-15,
+
+clawY+15,
+
+5,
+
+20
+
+);
+
+ctx.fillRect(
+
+clawX+10,
+
+clawY+15,
+
+5,
+
+20
 
 );
 
@@ -517,13 +572,13 @@ p.grabbed
 
 ){
 
-drawY = clawY + 25;
+drawY = clawY + 35;
 
 p.x = clawX;
 
 }
 
-ctx.fillStyle = p.color;
+ctx.fillStyle=p.color;
 
 ctx.beginPath();
 
@@ -549,6 +604,40 @@ ctx.fill();
 
 
 
+function drawMessages(ctx){
+
+if(
+
+floatingTimer<=0
+
+){
+
+return;
+
+}
+
+ctx.fillStyle="white";
+
+ctx.font="28px Arial";
+
+ctx.textAlign="center";
+
+ctx.fillText(
+
+floatingText,
+
+400,
+
+100
+
+);
+
+floatingTimer--;
+
+}
+
+
+
 function loop(ctx){
 
 requestAnimationFrame(
@@ -562,5 +651,7 @@ updateClaw();
 drawMachine(ctx);
 
 drawPrizes(ctx);
+
+drawMessages(ctx);
 
 }
