@@ -17,6 +17,7 @@ questionsAttempted:0
 };
 
 function authorizeStudentLogin(){
+  initGame();
 
 player.name =
 
@@ -56,7 +57,9 @@ document
 "none";
 
 updateHUD();
-
+  
+initGame();
+  
 saveLocal();
 
 }
