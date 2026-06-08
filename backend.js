@@ -12,9 +12,12 @@ prizes: 0,
 
 questionsCorrect: 0,
 
-questionsAttempted: 0
+questionsAttempted: 0,
+
+topicStats: {}
 
 };
+
 
 
 function authorizeStudentLogin(){
@@ -65,6 +68,7 @@ saveLocal();
 }
 
 
+
 function saveLocal(){
 
 localStorage.setItem(
@@ -76,6 +80,7 @@ JSON.stringify(player)
 );
 
 }
+
 
 
 function loadLocal(){
@@ -100,6 +105,20 @@ player =
 
 JSON.parse(data);
 
+
+
+player.topicStats ??= {};
+
+player.questionsCorrect ??= 0;
+
+player.questionsAttempted ??= 0;
+
+player.prizes ??= 0;
+
+player.streak ??= 0;
+
+
+
 document
 .getElementById(
 "registration-screen"
@@ -114,6 +133,7 @@ initGame();
 }
 
 
+
 function resetPlayer(){
 
 localStorage.removeItem(
@@ -125,6 +145,7 @@ localStorage.removeItem(
 location.reload();
 
 }
+
 
 
 window.onload = ()=>{
