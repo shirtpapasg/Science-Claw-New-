@@ -4,6 +4,8 @@ let clawY = 0;
 
 let dropping = false;
 
+let rising = false;
+
 let prizes = [];
 
 const GAME_WIDTH = 800;
@@ -46,7 +48,9 @@ document.getElementById(
 
 const ctx =
 
-canvas.getContext("2d");
+canvas.getContext(
+"2d"
+);
 
 for(
 
@@ -68,7 +72,9 @@ y:
 
 360 + Math.random()*70,
 
-caught:false
+caught:false,
+
+grabbed:false
 
 });
 
@@ -95,13 +101,24 @@ loop(ctx);
 }
 
 
-function handleControls(e){
 
-if(dropping) return;
+function handleControls(e){
 
 if(
 
-e.key === "ArrowLeft"
+dropping ||
+
+rising
+
+){
+
+return;
+
+}
+
+if(
+
+e.key==="ArrowLeft"
 
 ){
 
@@ -111,7 +128,7 @@ clawX -= 25;
 
 if(
 
-e.key === "ArrowRight"
+e.key==="ArrowRight"
 
 ){
 
@@ -123,11 +140,11 @@ clawX =
 
 Math.max(
 
-30,
+40,
 
 Math.min(
 
-770,
+760,
 
 clawX
 
@@ -137,7 +154,7 @@ clawX
 
 if(
 
-e.key === " "
+e.key===" "
 
 ){
 
@@ -146,6 +163,7 @@ dropClaw();
 }
 
 }
+
 
 
 function dropClaw(){
@@ -177,6 +195,7 @@ dropping = true;
 }
 
 
+
 function checkCatch(){
 
 for(
@@ -189,9 +208,13 @@ if(
 
 p.caught
 
-) continue;
+){
 
-const dist =
+continue;
+
+}
+
+const dx =
 
 Math.abs(
 
@@ -199,33 +222,25 @@ p.x - clawX
 
 );
 
-if(
-
-dist < 30
-
-&&
+const dy =
 
 Math.abs(
 
 p.y - clawY
 
-) < 35
+);
+
+if(
+
+dx < 30
+
+&&
+
+dy < 35
 
 ){
 
-p.caught = true;
-
-player.prizes++;
-
-alert(
-
-"You caught one!"
-
-);
-
-updateHUD();
-
-saveLocal();
+p.grabbed = true;
 
 return;
 
@@ -234,6 +249,7 @@ return;
 }
 
 }
+
 
 
 function updateClaw(){
@@ -246,40 +262,95 @@ dropping
 
 clawY += 8;
 
+checkCatch();
+
 if(
 
-clawY > 420
+clawY >= 420
 
 ){
 
-checkCatch();
-
 dropping = false;
 
-}
+rising = true;
 
 }
 
-else{
+}
+
+
 
 if(
 
-clawY > 0
+rising
 
 ){
 
 clawY -= 8;
 
-}
+if(
+
+clawY <= 0
+
+){
+
+clawY = 0;
+
+rising = false;
+
+completeGrab();
 
 }
 
 }
+
+}
+
+
+
+function completeGrab(){
+
+for(
+
+const p of prizes
+
+){
+
+if(
+
+p.grabbed
+
+){
+
+p.grabbed = false;
+
+p.caught = true;
+
+player.prizes++;
+
+updateHUD();
+
+saveLocal();
+
+alert(
+
+"You caught one!"
+
+);
+
+return;
+
+}
+
+}
+
+}
+
 
 
 function drawMachine(ctx){
 
-ctx.fillStyle = "#111";
+ctx.fillStyle="#111";
 
 ctx.fillRect(
 
@@ -291,7 +362,7 @@ GAME_HEIGHT
 
 );
 
-ctx.fillStyle = "#444";
+ctx.fillStyle="#444";
 
 ctx.fillRect(
 
@@ -303,9 +374,9 @@ GAME_WIDTH,
 
 );
 
-ctx.strokeStyle = "white";
+ctx.strokeStyle="white";
 
-ctx.lineWidth = 3;
+ctx.lineWidth=3;
 
 ctx.beginPath();
 
@@ -327,7 +398,7 @@ clawY
 
 ctx.stroke();
 
-ctx.fillStyle = "white";
+ctx.fillStyle="white";
 
 ctx.fillRect(
 
@@ -344,9 +415,10 @@ clawY,
 }
 
 
+
 function drawPrizes(ctx){
 
-ctx.fillStyle = "gold";
+ctx.fillStyle="gold";
 
 for(
 
@@ -358,7 +430,25 @@ if(
 
 p.caught
 
-) continue;
+){
+
+continue;
+
+}
+
+let drawY = p.y;
+
+if(
+
+p.grabbed
+
+){
+
+drawY = clawY + 25;
+
+p.x = clawX;
+
+}
 
 ctx.beginPath();
 
@@ -366,7 +456,7 @@ ctx.arc(
 
 p.x,
 
-p.y,
+drawY,
 
 18,
 
@@ -381,6 +471,7 @@ ctx.fill();
 }
 
 }
+
 
 
 function loop(ctx){
