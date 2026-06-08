@@ -12,6 +12,9 @@ const GAME_WIDTH = 800;
 
 const GAME_HEIGHT = 500;
 
+const GRAB_CHANCE = 0.65;
+
+
 function initGame(){
 
 const container =
@@ -56,11 +59,49 @@ for(
 
 let i=0;
 
-i<10;
+i<12;
 
 i++
 
 ){
+
+const rarityRoll =
+
+Math.random();
+
+let rarity = "common";
+
+let value = 1;
+
+let color = "gold";
+
+if(
+
+rarityRoll > 0.85
+
+){
+
+rarity = "legend";
+
+value = 5;
+
+color = "cyan";
+
+}
+
+else if(
+
+rarityRoll > 0.60
+
+){
+
+rarity = "rare";
+
+value = 3;
+
+color = "violet";
+
+}
 
 prizes.push({
 
@@ -74,7 +115,13 @@ y:
 
 caught:false,
 
-grabbed:false
+grabbed:false,
+
+rarity,
+
+value,
+
+color
 
 });
 
@@ -146,9 +193,7 @@ Math.min(
 
 760,
 
-clawX
-
-)
+clawX)
 
 );
 
@@ -176,7 +221,7 @@ player.credits <= 0
 
 alert(
 
-"No credits"
+"Earn more credits"
 
 );
 
@@ -232,15 +277,27 @@ p.y - clawY
 
 if(
 
-dx < 30
+dx < 28
 
 &&
 
-dy < 35
+dy < 30
+
+){
+
+if(
+
+Math.random()
+
+<
+
+GRAB_CHANCE
 
 ){
 
 p.grabbed = true;
+
+}
 
 return;
 
@@ -310,6 +367,8 @@ completeGrab();
 
 function completeGrab(){
 
+let success = false;
+
 for(
 
 const p of prizes
@@ -322,11 +381,15 @@ p.grabbed
 
 ){
 
+success = true;
+
 p.grabbed = false;
 
 p.caught = true;
 
-player.prizes++;
+player.prizes += p.value;
+
+player.streak++;
 
 updateHUD();
 
@@ -334,13 +397,25 @@ saveLocal();
 
 alert(
 
-"You caught one!"
+`${p.rarity.toUpperCase()} prize +${p.value}`
 
 );
 
-return;
+break;
 
 }
+
+}
+
+if(
+
+!success
+
+){
+
+player.streak = 0;
+
+updateHUD();
 
 }
 
@@ -418,8 +493,6 @@ clawY,
 
 function drawPrizes(ctx){
 
-ctx.fillStyle="gold";
-
 for(
 
 const p of prizes
@@ -449,6 +522,8 @@ drawY = clawY + 25;
 p.x = clawX;
 
 }
+
+ctx.fillStyle = p.color;
 
 ctx.beginPath();
 
