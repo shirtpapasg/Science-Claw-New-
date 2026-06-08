@@ -1,10 +1,15 @@
+let currentReward = 0;
+
+let currentQuestion = null;
+
 function showTopUpMenu(){
 
 document
 .getElementById(
 "topup-modal"
 )
-.style.display="block";
+.style.display=
+"block";
 
 }
 
@@ -16,36 +21,153 @@ reward
 
 ){
 
+currentReward = reward;
+
 document
 .getElementById(
 "topup-modal"
 )
-.style.display="none";
+.style.display=
+"none";
 
-const pass =
+document
+.getElementById(
+"quiz-modal"
+)
+.style.display=
+"block";
 
-confirm(
+loadQuestion();
 
-`Pretend quiz complete?\nReward: ${reward}`
+}
+
+function loadQuestion(){
+
+currentQuestion =
+
+QUESTIONS[
+
+Math.floor(
+
+Math.random()
+
+* QUESTIONS.length
+
+)
+
+];
+
+document
+.getElementById(
+"question-text"
+)
+.innerText=
+
+currentQuestion.question;
+
+const area=
+
+document
+.getElementById(
+"answer-area"
+);
+
+area.innerHTML="";
+
+currentQuestion.options
+.forEach(
+
+option=>{
+
+area.innerHTML +=
+
+`
+
+<label>
+
+<input
+type="radio"
+name="ans"
+value="${option}"
+>
+
+${option}
+
+</label>
+
+<br>
+
+`;
+
+}
 
 );
 
-if(!pass) return;
+}
 
-player.credits += reward;
+function submitAnswer(){
 
-player.questionsAttempted += questions;
+const selected=
 
-player.questionsCorrect += questions;
+document.querySelector(
+
+'input[name="ans"]:checked'
+
+);
+
+if(!selected){
+
+alert(
+
+"Choose answer"
+
+);
+
+return;
+
+}
+
+player.questionsAttempted++;
+
+if(
+
+selected.value===
+
+currentQuestion.correct
+
+){
+
+player.questionsCorrect++;
+
+player.credits +=
+
+currentReward;
+
+alert(
+
+`Correct! +${currentReward} credits`
+
+);
+
+}else{
+
+alert(
+
+"Wrong answer"
+
+);
+
+}
+
+document
+.getElementById(
+"quiz-modal"
+)
+.style.display=
+"none";
 
 updateHUD();
 
 saveLocal();
-
-alert(
-
-`+${reward} credits`
-
-);
 
 }
