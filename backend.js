@@ -1,23 +1,23 @@
 let player = {
 
-name:"",
+name: "",
 
-studentClass:"",
+studentClass: "",
 
-credits:0,
+credits: 0,
 
-streak:0,
+streak: 0,
 
-prizes:0,
+prizes: 0,
 
-questionsCorrect:0,
+questionsCorrect: 0,
 
-questionsAttempted:0
+questionsAttempted: 0
 
 };
 
+
 function authorizeStudentLogin(){
-  initGame();
 
 player.name =
 
@@ -33,7 +33,7 @@ document.getElementById(
 
 if(
 
-player.name.trim()===""
+player.name.trim() === ""
 
 ){
 
@@ -57,12 +57,13 @@ document
 "none";
 
 updateHUD();
-  
+
 initGame();
-  
+
 saveLocal();
 
 }
+
 
 function saveLocal(){
 
@@ -76,6 +77,7 @@ JSON.stringify(player)
 
 }
 
+
 function loadLocal(){
 
 const data =
@@ -84,7 +86,15 @@ localStorage.getItem(
 "sciencePlayer"
 );
 
-if(!data) return;
+if(
+
+!data
+
+){
+
+return;
+
+}
 
 player =
 
@@ -99,9 +109,25 @@ document
 
 updateHUD();
 
+initGame();
+
 }
 
-window.onload=()=>{
+
+function resetPlayer(){
+
+localStorage.removeItem(
+
+"sciencePlayer"
+
+);
+
+location.reload();
+
+}
+
+
+window.onload = ()=>{
 
 loadLocal();
 
