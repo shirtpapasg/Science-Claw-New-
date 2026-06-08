@@ -1,6 +1,10 @@
-const QUESTIONS = [
+const QUESTIONS = {
+
+P3:[
 
 {
+
+topic:"Heat",
 
 question:
 
@@ -8,9 +12,9 @@ question:
 
 options:[
 
-"Plastic",
-
 "Wood",
+
+"Plastic",
 
 "Metal",
 
@@ -26,50 +30,146 @@ correct:
 
 {
 
+topic:"Plants",
+
 question:
 
-"Water boils at what temperature?",
+"What do plants need to make food?",
 
 options:[
 
-"50°C",
+"Moonlight",
 
-"100°C",
+"Sunlight",
 
-"150°C",
+"Sand",
 
-"0°C"
+"Plastic"
 
 ],
 
 correct:
 
-"100°C"
+"Sunlight"
+
+}
+
+],
+
+P4:[
+
+{
+
+topic:"Matter",
+
+question:
+
+"Water changes to gas during?",
+
+options:[
+
+"Melting",
+
+"Evaporation",
+
+"Freezing",
+
+"Condensing"
+
+],
+
+correct:
+
+"Evaporation"
 
 },
 
 {
 
+topic:"Heat",
+
 question:
 
-"Which animal is cold blooded?",
+"Heat flows from?",
 
 options:[
 
-"Cat",
+"Cold to hot",
 
-"Snake",
+"Hot to cold",
 
-"Dog",
+"Equal both ways",
 
-"Whale"
+"Nowhere"
 
 ],
 
 correct:
 
-"Snake"
+"Hot to cold"
 
 }
 
-];
+],
+
+P5:[
+
+{
+
+topic:"Cells",
+
+question:
+
+"Which part controls cell activities?",
+
+options:[
+
+"Nucleus",
+
+"Cell wall",
+
+"Membrane",
+
+"Cytoplasm"
+
+],
+
+correct:
+
+"Nucleus"
+
+}
+
+],
+
+P6:[
+
+{
+
+topic:"Electricity",
+
+question:
+
+"Series circuits have?",
+
+options:[
+
+"One pathway",
+
+"Many pathways",
+
+"No pathway",
+
+"Random pathway"
+
+],
+
+correct:
+
+"One pathway"
+
+}
+
+]
+
+};
