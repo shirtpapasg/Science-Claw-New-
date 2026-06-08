@@ -1,173 +1,195 @@
 const QUESTIONS = {
 
-P3:[
+P3: [
 
 {
-
-topic:"Heat",
-
-question:
-
-"Which material conducts heat best?",
-
-options:[
-
-"Wood",
-
-"Plastic",
-
-"Metal",
-
-"Paper"
-
-],
-
-correct:
-
-"Metal"
-
+topic: "Heat",
+question: "Which material conducts heat best?",
+options: ["Wood","Plastic","Metal","Paper"],
+correct: "Metal"
 },
 
 {
+topic: "Plants",
+question: "What do plants need to make food?",
+options: ["Sunlight","Moonlight","Plastic","Sand"],
+correct: "Sunlight"
+},
 
-topic:"Plants",
+{
+topic: "Animals",
+question: "Which body part helps fish breathe?",
+options: ["Lungs","Gills","Nose","Skin"],
+correct: "Gills"
+},
 
-question:
-
-"What do plants need to make food?",
-
-options:[
-
-"Moonlight",
-
-"Sunlight",
-
-"Sand",
-
-"Plastic"
-
-],
-
-correct:
-
-"Sunlight"
-
+{
+topic: "Matter",
+question: "Which is a liquid?",
+options: ["Stone","Milk","Book","Wood"],
+correct: "Milk"
 }
 
 ],
 
-P4:[
+
+
+P4: [
 
 {
-
-topic:"Matter",
-
-question:
-
-"Water changes to gas during?",
-
-options:[
-
-"Melting",
-
-"Evaporation",
-
-"Freezing",
-
-"Condensing"
-
-],
-
-correct:
-
-"Evaporation"
-
-},
-
-{
-
-topic:"Heat",
-
-question:
-
-"Heat flows from?",
-
-options:[
-
+topic: "Heat",
+question: "Heat flows from?",
+options: [
 "Cold to hot",
-
 "Hot to cold",
-
 "Equal both ways",
-
 "Nowhere"
-
 ],
+correct: "Hot to cold"
+},
 
-correct:
+{
+topic: "Matter",
+question: "Water changes into gas during?",
+options: [
+"Melting",
+"Freezing",
+"Evaporation",
+"Condensing"
+],
+correct: "Evaporation"
+},
 
-"Hot to cold"
+{
+topic: "Forces",
+question: "A push or pull is called?",
+options: [
+"Energy",
+"Force",
+"Heat",
+"Light"
+],
+correct: "Force"
+},
 
+{
+topic: "Magnets",
+question: "Magnets attract materials containing?",
+options: [
+"Iron",
+"Paper",
+"Plastic",
+"Wood"
+],
+correct: "Iron"
 }
 
 ],
 
-P5:[
+
+
+P5: [
 
 {
-
-topic:"Cells",
-
-question:
-
-"Which part controls cell activities?",
-
-options:[
-
+topic: "Cells",
+question: "Which part controls cell activities?",
+options: [
 "Nucleus",
-
 "Cell wall",
-
-"Membrane",
-
-"Cytoplasm"
-
+"Cytoplasm",
+"Membrane"
 ],
+correct: "Nucleus"
+},
 
-correct:
+{
+topic: "Water Cycle",
+question: "Cloud formation is called?",
+options: [
+"Melting",
+"Condensation",
+"Freezing",
+"Evaporation"
+],
+correct: "Condensation"
+},
 
-"Nucleus"
+{
+topic: "Human Body",
+question: "Which system carries blood?",
+options: [
+"Digestive",
+"Respiratory",
+"Circulatory",
+"Skeletal"
+],
+correct: "Circulatory"
+},
 
+{
+topic: "Plants",
+question: "Water enters plants mainly through?",
+options: [
+"Leaves",
+"Flowers",
+"Roots",
+"Stem"
+],
+correct: "Roots"
 }
 
 ],
 
-P6:[
+
+
+P6: [
 
 {
-
-topic:"Electricity",
-
-question:
-
-"Series circuits have?",
-
-options:[
-
+topic: "Electricity",
+question: "Series circuits have?",
+options: [
 "One pathway",
-
 "Many pathways",
-
-"No pathway",
-
-"Random pathway"
-
+"No pathways",
+"Random pathways"
 ],
+correct: "One pathway"
+},
 
-correct:
+{
+topic: "Energy",
+question: "Energy cannot be?",
+options: [
+"Transferred",
+"Changed",
+"Destroyed",
+"Stored"
+],
+correct: "Destroyed"
+},
 
-"One pathway"
+{
+topic: "Forces",
+question: "Friction usually causes objects to?",
+options: [
+"Speed up",
+"Slow down",
+"Float",
+"Expand"
+],
+correct: "Slow down"
+},
 
+{
+topic: "Light",
+question: "Light travels in?",
+options: [
+"Curves",
+"Circles",
+"Straight lines",
+"Zig zags"
+],
+correct: "Straight lines"
 }
 
 ]
