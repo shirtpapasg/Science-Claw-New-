@@ -1,173 +1,145 @@
-function generateReport(){
+let player = {
 
-let accuracy = 0;
+name:"",
 
-if(
+studentClass:"",
 
-player.questionsAttempted > 0
+credits:0,
 
-){
+streak:0,
 
-accuracy =
+prizes:0,
 
-Math.round(
+questionsCorrect:0,
 
-player.questionsCorrect /
+questionsAttempted:0,
 
-player.questionsAttempted
-
-*100
-
-);
-
-}
-
-return {
-
-name:
-
-player.name,
-
-class:
-
-player.studentClass,
-
-credits:
-
-player.credits,
-
-prizes:
-
-player.prizes,
-
-streak:
-
-player.streak,
-
-attempted:
-
-player.questionsAttempted,
-
-correct:
-
-player.questionsCorrect,
-
-accuracy:
-
-accuracy,
-
-topics:
-
-player.topicStats
+topicStats:{}
 
 };
 
-}
 
 
+function authorizeStudentLogin(){
 
-function saveGameReport(){
+player.name =
 
-const report =
-
-generateReport();
-
-const blob =
-
-new Blob(
-
-[
-
-JSON.stringify(
-
-report,
-
-null,
-
-2
-
+document
+.getElementById(
+"student-name"
 )
+.value;
 
-],
+player.studentClass =
 
-{
+document
+.getElementById(
+"student-class"
+)
+.value;
 
-type:
+if(
 
-"application/json"
-
-}
-
-);
-
-const link =
-
-document.createElement(
-"a"
-);
-
-link.href =
-
-URL.createObjectURL(
-blob
-);
-
-link.download =
-
-`${player.name}_report.json`;
-
-link.click();
-
-}
-
-
-
-function getWeakTopics(){
-
-const stats =
-
-player.topicStats;
-
-const weak = [];
-
-for(
-
-const topic in stats
+player.name.trim()===""
 
 ){
 
+alert(
+
+"Enter your name"
+
+);
+
+return;
+
+}
+
+player.credits = 3;
+
+document
+.getElementById(
+"registration-screen"
+)
+.style.display=
+"none";
+
+updateHUD();
+
+initGame();
+
+saveLocal();
+
+}
+
+
+
+function saveLocal(){
+
+localStorage.setItem(
+
+"sciencePlayer",
+
+JSON.stringify(player)
+
+);
+
+}
+
+
+
+function loadLocal(){
+
 const data =
 
-stats[topic];
-
-const percent =
-
-Math.round(
-
-data.correct /
-
-data.attempted
-
-*100
-
+localStorage.getItem(
+"sciencePlayer"
 );
 
 if(
 
-percent < 70
+!data
 
 ){
 
-weak.push(
+return;
 
-`${topic} (${percent}%)`
+}
+
+player =
+
+JSON.parse(data);
+
+document
+.getElementById(
+"registration-screen"
+)
+.style.display=
+"none";
+
+updateHUD();
+
+initGame();
+
+}
+
+
+
+function resetPlayer(){
+
+localStorage.removeItem(
+
+"sciencePlayer"
 
 );
 
-}
+location.reload();
 
 }
 
-return weak;
 
-}
+
+window.onload=()=>{
+
+loadLocal();
+
+};
