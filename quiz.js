@@ -13,6 +13,8 @@ document
 
 }
 
+
+
 function startQuiz(
 
 questions,
@@ -41,17 +43,25 @@ loadQuestion();
 
 }
 
+
+
 function loadQuestion(){
+
+const pool =
+
+QUESTIONS[
+player.studentClass
+];
 
 currentQuestion =
 
-QUESTIONS[
+pool[
 
 Math.floor(
 
 Math.random()
 
-* QUESTIONS.length
+* pool.length
 
 )
 
@@ -59,13 +69,21 @@ Math.random()
 
 document
 .getElementById(
+"question-title"
+)
+.innerText =
+
+currentQuestion.topic;
+
+document
+.getElementById(
 "question-text"
 )
-.innerText=
+.innerText =
 
 currentQuestion.question;
 
-const area=
+const area =
 
 document
 .getElementById(
@@ -105,9 +123,11 @@ ${option}
 
 }
 
+
+
 function submitAnswer(){
 
-const selected=
+const selected =
 
 document.querySelector(
 
@@ -115,7 +135,11 @@ document.querySelector(
 
 );
 
-if(!selected){
+if(
+
+!selected
+
+){
 
 alert(
 
@@ -131,7 +155,9 @@ player.questionsAttempted++;
 
 if(
 
-selected.value===
+selected.value
+
+===
 
 currentQuestion.correct
 
@@ -143,21 +169,19 @@ player.credits +=
 
 currentReward;
 
-alert(
-
-`Correct! +${currentReward} credits`
-
-);
-
-}else{
-
-alert(
-
-"Wrong answer"
-
-);
+player.streak++;
 
 }
+
+else{
+
+player.streak=0;
+
+}
+
+updateHUD();
+
+saveLocal();
 
 document
 .getElementById(
@@ -165,9 +189,5 @@ document
 )
 .style.display=
 "none";
-
-updateHUD();
-
-saveLocal();
 
 }
