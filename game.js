@@ -415,23 +415,25 @@ return;
 
 }
 
+if(
 
+e.key==="ArrowLeft"
 
-if(e.key==="ArrowLeft"){
+){
 
 clawX-=0.5;
 
 }
 
+if(
 
+e.key==="ArrowRight"
 
-if(e.key==="ArrowRight"){
+){
 
 clawX+=0.5;
 
 }
-
-
 
 clawX=
 
@@ -449,17 +451,17 @@ clawX
 
 );
 
-
-
 claw.position.x=
 
 clawX;
 
-
-
 if(
 
 e.code==="Space"
+
+||
+
+e.key===" "
 
 ){
 
@@ -468,7 +470,6 @@ dropClaw();
 }
 
 }
-
 
 
 function dropClaw(){
