@@ -6,17 +6,23 @@ let renderer;
 
 let claw;
 
-let machine;
+let prizes=[];
 
-let prizes = [];
+let clawX=0;
 
-let clawX = 0;
+let clawY=4;
+
+let dropping=false;
+
+let rising=false;
+
+let grabbedPrize=null;
 
 
 
 function initGame(){
 
-const container =
+const container=
 
 document.getElementById(
 "canvas-container"
@@ -26,11 +32,11 @@ container.innerHTML="";
 
 
 
-scene =
+scene=
 
 new THREE.Scene();
 
-scene.background =
+scene.background=
 
 new THREE.Color(
 0x111111
@@ -38,13 +44,13 @@ new THREE.Color(
 
 
 
-camera =
+camera=
 
 new THREE.PerspectiveCamera(
 
 70,
 
-window.innerWidth /
+window.innerWidth/
 
 window.innerHeight,
 
@@ -76,7 +82,7 @@ camera.lookAt(
 
 
 
-renderer =
+renderer=
 
 new THREE.WebGLRenderer({
 
@@ -100,7 +106,7 @@ renderer.domElement
 
 
 
-const ambient =
+const ambient=
 
 new THREE.AmbientLight(
 
@@ -116,7 +122,7 @@ ambient
 
 
 
-const light =
+const light=
 
 new THREE.PointLight(
 
@@ -170,7 +176,7 @@ animate();
 
 function buildMachine(){
 
-machine =
+const machine=
 
 new THREE.Mesh(
 
@@ -194,7 +200,7 @@ color:0xffffff
 
 );
 
-machine.position.y = 2;
+machine.position.y=2;
 
 scene.add(
 machine
@@ -202,7 +208,7 @@ machine
 
 
 
-claw =
+claw=
 
 new THREE.Mesh(
 
@@ -256,7 +262,7 @@ i++
 
 ){
 
-const prize =
+const prize=
 
 new THREE.Mesh(
 
@@ -310,13 +316,29 @@ function controls(e){
 
 if(
 
+dropping ||
+
+rising
+
+){
+
+return;
+
+}
+
+
+
+if(
+
 e.key==="ArrowLeft"
 
 ){
 
-clawX -= 0.5;
+clawX -=0.5;
 
 }
+
+
 
 if(
 
@@ -324,13 +346,13 @@ e.key==="ArrowRight"
 
 ){
 
-clawX += 0.5;
+clawX +=0.5;
 
 }
 
 
 
-clawX =
+clawX=
 
 Math.max(
 
@@ -346,7 +368,235 @@ clawX
 
 );
 
-claw.position.x = clawX;
+claw.position.x=
+
+clawX;
+
+
+
+if(
+
+e.code==="Space"
+
+){
+
+dropClaw();
+
+}
+
+}
+
+
+
+function dropClaw(){
+
+if(
+
+player.credits<=0
+
+){
+
+setMessage?.(
+
+"NO CREDITS"
+
+);
+
+return;
+
+}
+
+
+
+player.credits--;
+
+updateHUD();
+
+saveLocal();
+
+dropping=true;
+
+}
+
+
+
+function checkGrab(){
+
+for(
+
+const prize of prizes
+
+){
+
+if(
+
+prize.userData.caught
+
+){
+
+continue;
+
+}
+
+
+
+const dx=
+
+Math.abs(
+
+prize.position.x -
+
+claw.position.x
+
+);
+
+
+
+const dy=
+
+Math.abs(
+
+prize.position.y -
+
+claw.position.y
+
+);
+
+
+
+if(
+
+dx<0.6
+
+&&
+
+dy<0.6
+
+){
+
+grabbedPrize=
+
+prize;
+
+return;
+
+}
+
+}
+
+}
+
+
+
+function updateClaw(){
+
+if(
+
+dropping
+
+){
+
+clawY -=0.08;
+
+claw.position.y=
+
+clawY;
+
+
+
+checkGrab();
+
+
+
+if(
+
+clawY<=-0.5
+
+){
+
+dropping=false;
+
+rising=true;
+
+}
+
+}
+
+
+
+if(
+
+rising
+
+){
+
+clawY +=0.08;
+
+claw.position.y=
+
+clawY;
+
+
+
+if(
+
+grabbedPrize
+
+){
+
+grabbedPrize.position.x=
+
+claw.position.x;
+
+grabbedPrize.position.y=
+
+claw.position.y-0.7;
+
+}
+
+
+
+if(
+
+clawY>=4
+
+){
+
+clawY=4;
+
+rising=false;
+
+
+
+if(
+
+grabbedPrize
+
+){
+
+grabbedPrize.userData.caught=true;
+
+player.prizes++;
+
+player.collection ??= {};
+
+player.collection["Science Item"] ??=0;
+
+player.collection["Science Item"]++;
+
+evaluateAchievements?.();
+
+updateHUD();
+
+saveLocal();
+
+grabbedPrize=null;
+
+}
+
+}
+
+}
 
 }
 
@@ -359,6 +609,8 @@ requestAnimationFrame(
 animate
 
 );
+
+updateClaw();
 
 renderer.render(
 
