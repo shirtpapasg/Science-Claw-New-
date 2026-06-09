@@ -739,3 +739,61 @@ camera
 );
 
 }
+
+function checkCollectionAchievement(){
+
+const items=[
+
+"Battery",
+
+"Atom",
+
+"Plant",
+
+"Magnet",
+
+"Crystal"
+
+];
+
+
+
+let found=0;
+
+
+
+for(
+
+const item of items
+
+){
+
+if(
+
+player.collection?.[item] > 0
+
+){
+
+found++;
+
+}
+
+}
+
+
+
+if(
+
+found===items.length
+
+){
+
+alert(
+
+"🏆 Scientist Collection Completed!"
+
+);
+
+}
+
+}
