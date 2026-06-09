@@ -15,10 +15,204 @@ Science Claw New
 
 </title>
 
-<link rel="stylesheet"
-href="style.css">
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<style>
+
+body{
+
+margin:0;
+
+background:#050505;
+
+color:white;
+
+font-family:Arial;
+
+overflow:hidden;
+
+}
+
+
+
+#registration-screen{
+
+position:absolute;
+
+top:30px;
+
+left:30px;
+
+z-index:20;
+
+}
+
+
+
+#registration-screen input,
+
+#registration-screen select{
+
+padding:10px;
+
+font-size:20px;
+
+margin-top:10px;
+
+width:240px;
+
+}
+
+
+
+#registration-screen button{
+
+padding:15px;
+
+font-size:22px;
+
+margin-top:20px;
+
+cursor:pointer;
+
+}
+
+
+
+#canvas-container{
+
+position:fixed;
+
+top:0;
+
+left:0;
+
+width:100vw;
+
+height:100vh;
+
+z-index:1;
+
+}
+
+
+
+#ui-layer{
+
+position:absolute;
+
+left:20px;
+
+bottom:20px;
+
+z-index:15;
+
+}
+
+
+
+.hud{
+
+background:rgba(
+
+0,
+0,
+0,
+0.8
+
+);
+
+padding:20px;
+
+border-radius:20px;
+
+width:280px;
+
+}
+
+
+
+.hud p{
+
+font-size:18px;
+
+}
+
+
+
+.hud button{
+
+width:100%;
+
+padding:12px;
+
+margin-top:10px;
+
+font-size:18px;
+
+cursor:pointer;
+
+}
+
+
+
+.modal{
+
+display:none;
+
+position:fixed;
+
+top:50%;
+
+left:50%;
+
+transform:translate(
+
+-50%,
+
+-50%
+
+);
+
+background:#111;
+
+padding:30px;
+
+border-radius:20px;
+
+z-index:100;
+
+width:350px;
+
+}
+
+
+
+.modal button{
+
+width:100%;
+
+padding:12px;
+
+margin-top:10px;
+
+font-size:18px;
+
+}
+
+
+
+#answer-area button{
+
+width:100%;
+
+margin-top:10px;
+
+padding:12px;
+
+}
+
+</style>
 
 </head>
 
@@ -33,10 +227,14 @@ SCIENCE CLAW NEW
 </h1>
 
 <input
-id="student-name"
-placeholder="Student Name">
 
-<br><br>
+id="student-name"
+
+placeholder="Student Name"
+
+>
+
+<br>
 
 <select id="student-class">
 
@@ -66,7 +264,7 @@ Primary 6
 
 </select>
 
-<br><br>
+<br>
 
 <button onclick="authorizeStudentLogin()">
 
@@ -148,19 +346,21 @@ Accuracy:
 
 </p>
 
+
+
 <button onclick="showTopUpMenu()">
 
 Earn Credits
 
 </button>
 
-<button onclick="openDashboard()">
+<button onclick="openDashboard?.()">
 
 Dashboard
 
 </button>
 
-<button onclick="saveGameReport()">
+<button onclick="saveGameReport?.()">
 
 Save Report
 
@@ -178,29 +378,13 @@ Switch Player
 
 
 
-<div id="topup-modal"
+<div
 
-style="
+id="topup-modal"
 
-display:none;
+class="modal"
 
-position:fixed;
-
-top:50%;
-
-left:50%;
-
-transform:translate(-50%,-50%);
-
-background:black;
-
-padding:20px;
-
-color:white;
-
-z-index:999;
-
-">
+>
 
 <h2>
 
@@ -208,13 +392,17 @@ Earn Credits
 
 </h2>
 
-<button onclick="startQuiz(5,5)">
+<button onclick="startQuiz(1,3)">
 
-5 Questions → +5 Credits
+1 Question = +3 Credits
 
 </button>
 
-<br><br>
+<button onclick="startQuiz(3,10)">
+
+3 Questions = +10 Credits
+
+</button>
 
 <button onclick="document.getElementById('topup-modal').style.display='none'">
 
@@ -226,29 +414,13 @@ Close
 
 
 
-<div id="quiz-modal"
+<div
 
-style="
+id="quiz-modal"
 
-display:none;
+class="modal"
 
-position:fixed;
-
-top:50%;
-
-left:50%;
-
-transform:translate(-50%,-50%);
-
-background:black;
-
-padding:20px;
-
-color:white;
-
-z-index:999;
-
-">
+>
 
 <h2 id="question-title">
 
@@ -266,7 +438,7 @@ Question
 
 <button onclick="submitAnswer()">
 
-Submit
+Submit Answer
 
 </button>
 
@@ -278,9 +450,9 @@ Submit
 
 <script src="backend.js"></script>
 
-<script src="analytics.js"></script>
-
 <script src="quiz.js"></script>
+
+<script src="analytics.js"></script>
 
 <script src="game.js"></script>
 
