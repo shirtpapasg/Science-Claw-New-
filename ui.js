@@ -4,28 +4,28 @@ document
 .getElementById(
 "player-hud-tag"
 )
-innerText =
+.innerText =
 player.name;
 
 document
 .getElementById(
 "credit-display"
 )
-innerText =
+.innerText =
 player.credits;
 
 document
 .getElementById(
 "streak-display"
 )
-innerText =
+.innerText =
 player.streak;
 
 document
 .getElementById(
 "prizes-display"
 )
-innerText =
+.innerText =
 player.prizes;
 
 let accuracy = 0;
@@ -57,6 +57,8 @@ accuracy + "%";
 
 renderInstructions();
 
+renderCollection();
+
 }
 
 
@@ -69,14 +71,9 @@ document.getElementById(
 "instructions-box"
 );
 
-if(
-
-!box
-
-){
+if(!box){
 
 box =
-
 document.createElement(
 "div"
 );
@@ -93,17 +90,14 @@ box.style.right =
 box.style.bottom =
 "20px";
 
-box.style.padding =
-"12px";
-
 box.style.background =
 "rgba(0,0,0,.8)";
 
+box.style.padding =
+"12px";
+
 box.style.color =
 "white";
-
-box.style.border =
-"1px solid white";
 
 document.body.appendChild(
 box
@@ -119,20 +113,83 @@ box.innerHTML =
 
 <br><br>
 
-⬅️ ➡️ Move Claw
+⬅️ ➡️ Move
 
 <br>
 
-SPACE = Drop Claw
+SPACE = Drop
 
 <br><br>
 
-🎯 Catch prizes
-
-<br>
-
-🧠 Earn credits via quiz
+🧠 Earn Credits
 
 `;
+
+}
+
+
+
+function renderCollection(){
+
+let box =
+
+document.getElementById(
+"collection-box"
+);
+
+if(!box){
+
+box =
+document.createElement(
+"div"
+);
+
+box.id =
+"collection-box";
+
+box.style.position =
+"fixed";
+
+box.style.right =
+"20px";
+
+box.style.top =
+"20px";
+
+box.style.width =
+"220px";
+
+box.style.background =
+"rgba(0,0,0,.8)";
+
+box.style.padding =
+"12px";
+
+box.style.color =
+"white";
+
+document.body.appendChild(
+box
+);
+
+}
+
+let html =
+
+"<b>Science Collection</b><br><br>";
+
+for(
+
+const item in player.collection
+
+){
+
+html +=
+
+`${item} x ${player.collection[item]}<br>`;
+
+}
+
+box.innerHTML = html;
 
 }
