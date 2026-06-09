@@ -1,45 +1,30 @@
 let scene;
-
 let camera;
-
 let renderer;
 
 let claw;
-
 let cable;
 
 let prizes=[];
 
-let particles=[];
-
-let grabbedPrize=null;
-
 let clawX=0;
-
 let clawY=4;
 
 let dropping=false;
-
 let rising=false;
 
-let shake=0;
+let grabbedPrize=null;
 
+let shakeFrames=0;
 
-
-const pickupAudio =
-
+const pickupSound =
 new Audio(
-
 "https://actions.google.com/sounds/v1/cartoon/pop.ogg"
-
 );
 
-const missAudio =
-
+const failSound =
 new Audio(
-
-"https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
-
+"https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"
 );
 
 
@@ -47,13 +32,9 @@ new Audio(
 const SCIENCE_TYPES=[
 
 {name:"Battery",color:0xffff00,shape:"box"},
-
 {name:"Atom",color:0x66ccff,shape:"sphere"},
-
 {name:"Plant",color:0x55ff55,shape:"cone"},
-
 {name:"Magnet",color:0xff5555,shape:"cylinder"},
-
 {name:"Crystal",color:0xff66ff,shape:"diamond"}
 
 ];
@@ -62,7 +43,7 @@ const SCIENCE_TYPES=[
 
 function initGame(){
 
-const container=
+const container =
 
 document.getElementById(
 "canvas-container"
@@ -72,11 +53,9 @@ container.innerHTML="";
 
 
 
-scene=
+scene = new THREE.Scene();
 
-new THREE.Scene();
-
-scene.background=
+scene.background =
 
 new THREE.Color(
 0x101820
@@ -84,7 +63,7 @@ new THREE.Color(
 
 
 
-camera=
+camera =
 
 new THREE.PerspectiveCamera(
 
@@ -112,7 +91,7 @@ camera.position.set(
 
 
 
-renderer=
+renderer =
 
 new THREE.WebGLRenderer({
 
@@ -150,13 +129,13 @@ new THREE.AmbientLight(
 
 
 
-const light=
+const light =
 
 new THREE.PointLight(
 
 0xffffff,
 
-3
+4
 
 );
 
@@ -222,7 +201,7 @@ new THREE.MeshPhongMaterial({
 
 transparent:true,
 
-opacity:.15,
+opacity:0.15,
 
 color:0x88ccff
 
@@ -244,7 +223,11 @@ new THREE.Mesh(
 
 new THREE.BoxGeometry(
 
-10,.3,8
+10,
+
+0.3,
+
+8
 
 ),
 
@@ -270,7 +253,11 @@ new THREE.Mesh(
 
 new THREE.BoxGeometry(
 
-0.8,.5,.8
+0.8,
+
+0.5,
+
+0.8
 
 ),
 
@@ -284,7 +271,11 @@ color:0xffffff
 
 claw.position.set(
 
-0,4,0
+0,
+
+4,
+
+0
 
 );
 
@@ -319,19 +310,15 @@ cable
 function makeGeometry(shape){
 
 if(shape==="box")
-
 return new THREE.BoxGeometry(.6,.6,.6);
 
 if(shape==="sphere")
-
 return new THREE.SphereGeometry(.35);
 
 if(shape==="cone")
-
 return new THREE.ConeGeometry(.35,.7);
 
 if(shape==="cylinder")
-
 return new THREE.CylinderGeometry(.2,.2,.7);
 
 return new THREE.OctahedronGeometry(.4);
@@ -344,15 +331,7 @@ function spawnPrizes(){
 
 prizes=[];
 
-for(
-
-let i=0;
-
-i<15;
-
-i++
-
-){
+for(let i=0;i<15;i++){
 
 const type=
 
@@ -377,9 +356,7 @@ const mesh=
 new THREE.Mesh(
 
 makeGeometry(
-
 type.shape
-
 ),
 
 new THREE.MeshPhongMaterial({
@@ -414,13 +391,9 @@ type:type.name
 
 
 
-scene.add(
-mesh
-);
+scene.add(mesh);
 
-prizes.push(
-mesh
-);
+prizes.push(mesh);
 
 }
 
@@ -444,11 +417,7 @@ return;
 
 
 
-if(
-
-e.key==="ArrowLeft"
-
-){
+if(e.key==="ArrowLeft"){
 
 clawX-=0.5;
 
@@ -456,11 +425,7 @@ clawX-=0.5;
 
 
 
-if(
-
-e.key==="ArrowRight"
-
-){
+if(e.key==="ArrowRight"){
 
 clawX+=0.5;
 
@@ -514,7 +479,9 @@ player.credits<=0
 
 ){
 
-missAudio.play();
+failSound.currentTime=0;
+
+failSound.play();
 
 return;
 
@@ -546,11 +513,7 @@ if(
 
 p.userData.caught
 
-){
-
-continue;
-
-}
+) continue;
 
 
 
@@ -563,6 +526,8 @@ p.position.x-
 claw.position.x
 
 );
+
+
 
 const dy=
 
@@ -652,29 +617,21 @@ rising=false;
 
 if(grabbedPrize){
 
-pickupAudio.play();
+pickupSound.currentTime=0;
 
-shake=20;
+pickupSound.play();
 
-grabbedPrize.userData.caught=true;
+shakeFrames=25;
 
 player.prizes++;
-
-player.collection ??= {};
-
-player.collection[
-grabbedPrize.userData.type
-] ??=0;
-
-player.collection[
-grabbedPrize.userData.type
-]++;
-
-evaluateAchievements?.();
 
 updateHUD();
 
 saveLocal();
+
+grabbedPrize.userData.caught=true;
+
+grabbedPrize.visible=false;
 
 grabbedPrize=null;
 
@@ -716,37 +673,31 @@ claw.position.y,
 
 function updateCamera(){
 
-const wobble =
+camera.position.x =
 
 Math.sin(
 
-Date.now()*.001
+Date.now()*0.001
 
-)*0.2;
-
-
-
-camera.position.x=
-
-wobble;
+)*0.6;
 
 
 
 if(
 
-shake>0
+shakeFrames>0
 
 ){
 
 camera.position.x +=
 
-(Math.random()-.5)*0.2;
+(Math.random()-0.5)*0.8;
 
 camera.position.y +=
 
-(Math.random()-.5)*0.2;
+(Math.random()-0.5)*0.5;
 
-shake--;
+shakeFrames--;
 
 }
 
