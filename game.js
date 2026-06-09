@@ -1,34 +1,14 @@
-let clawX = 400;
+let scene;
 
-let clawY = 0;
+let camera;
 
-let dropping = false;
+let renderer;
 
-let rising = false;
+let claw;
 
-let prizes = [];
+let prizes=[];
 
-let floatingText = "";
-
-let floatingTimer = 0;
-
-const GAME_WIDTH = 800;
-
-const GAME_HEIGHT = 500;
-
-const GRAB_CHANCE = 0.65;
-
-const SCIENCE_ITEMS = [
-
-{emoji:"🧲",name:"Magnet"},
-{emoji:"🧪",name:"Test Tube"},
-{emoji:"🌡️",name:"Thermometer"},
-{emoji:"🔋",name:"Battery"},
-{emoji:"🌱",name:"Plant"},
-{emoji:"💡",name:"Bulb"},
-{emoji:"🐻",name:"Animal"}
-
-];
+let clawX=0;
 
 
 
@@ -40,39 +20,173 @@ document.getElementById(
 "canvas-container"
 );
 
-container.innerHTML =
+container.innerHTML="";
 
-`
 
-<canvas
-id="gameCanvas"
-width="800"
-height="500"
-style="
-border:4px solid white;
-display:block;
-margin:20px auto;
-background:#111;
-">
-</canvas>
 
-`;
+scene =
 
-prizes=[];
+new THREE.Scene();
 
-const canvas=
+scene.background =
 
-document.getElementById(
-"gameCanvas"
+new THREE.Color(
+0x111111
 );
 
-const ctx=
 
-canvas.getContext(
-"2d"
+
+camera =
+
+new THREE.PerspectiveCamera(
+
+75,
+
+window.innerWidth /
+
+window.innerHeight,
+
+0.1,
+
+1000
+
 );
 
-ctx.font="28px Arial";
+camera.position.set(
+
+0,
+
+8,
+
+14
+
+);
+
+
+
+renderer =
+
+new THREE.WebGLRenderer({
+
+antialias:true
+
+});
+
+renderer.setSize(
+
+window.innerWidth,
+
+window.innerHeight
+
+);
+
+container.appendChild(
+
+renderer.domElement
+
+);
+
+
+
+const light =
+
+new THREE.PointLight(
+
+0xffffff,
+
+2
+
+);
+
+light.position.set(
+
+5,
+
+10,
+
+5
+
+);
+
+scene.add(light);
+
+
+
+const machine =
+
+new THREE.Mesh(
+
+new THREE.BoxGeometry(
+
+10,
+
+6,
+
+8
+
+),
+
+new THREE.MeshPhongMaterial({
+
+wireframe:true
+
+})
+
+);
+
+machine.position.y=2;
+
+scene.add(machine);
+
+
+
+claw =
+
+new THREE.Mesh(
+
+new THREE.BoxGeometry(
+
+0.8,
+
+0.4,
+
+0.8
+
+),
+
+new THREE.MeshPhongMaterial({
+
+color:0xffffff
+
+})
+
+);
+
+claw.position.y=4;
+
+scene.add(claw);
+
+
+
+spawnPrizes();
+
+document.addEventListener(
+
+"keydown",
+
+controls
+
+);
+
+
+
+animate();
+
+}
+
+
+
+function spawnPrizes(){
 
 for(
 
@@ -84,75 +198,49 @@ i++
 
 ){
 
-const item=
+const prize =
 
-SCIENCE_ITEMS[
+new THREE.Mesh(
 
-Math.floor(
+new THREE.SphereGeometry(
+
+0.3
+
+),
+
+new THREE.MeshPhongMaterial({
+
+color:
 
 Math.random()
 
-*
+*0xffffff
 
-SCIENCE_ITEMS.length
+})
 
-)
+);
 
-];
+prize.position.set(
 
-prizes.push({
+(Math.random()-0.5)*7,
 
-x:
+-0.5,
 
-Math.random()*700+50,
+(Math.random()-0.5)*5
 
-y:
+);
 
-350+Math.random()*70,
+scene.add(prize);
 
-caught:false,
-
-grabbed:false,
-
-emoji:item.emoji,
-
-name:item.name
-
-});
+prizes.push(prize);
 
 }
-
-document.removeEventListener(
-
-"keydown",
-
-handleControls
-
-);
-
-document.addEventListener(
-
-"keydown",
-
-handleControls
-
-);
-
-loop(ctx);
 
 }
 
 
 
-function handleControls(e){
-
-if(
-
-dropping ||
-
-rising
-
-) return;
+function controls(e){
 
 if(
 
@@ -160,7 +248,7 @@ e.key==="ArrowLeft"
 
 ){
 
-clawX-=25;
+clawX -=0.5;
 
 }
 
@@ -170,429 +258,32 @@ e.key==="ArrowRight"
 
 ){
 
-clawX+=25;
+clawX +=0.5;
 
 }
 
-clawX=
+claw.position.x=
 
-Math.max(
-
-40,
-
-Math.min(
-
-760,
-
-clawX
-
-)
-
-);
-
-if(
-
-e.key===" "
-
-){
-
-dropClaw();
-
-}
+clawX;
 
 }
 
 
 
-function dropClaw(){
-
-if(
-
-player.credits<=0
-
-){
-
-setMessage(
-
-"NO CREDITS"
-
-);
-
-return;
-
-}
-
-player.credits--;
-
-updateHUD();
-
-saveLocal();
-
-dropping=true;
-
-}
-
-
-
-function setMessage(text){
-
-floatingText=text;
-
-floatingTimer=120;
-
-}
-
-
-
-function checkCatch(){
-
-for(
-
-const p of prizes
-
-){
-
-if(
-
-p.caught
-
-) continue;
-
-const dx=
-
-Math.abs(
-
-p.x-clawX
-
-);
-
-const dy=
-
-Math.abs(
-
-p.y-clawY
-
-);
-
-if(
-
-dx<28
-
-&&
-
-dy<30
-
-){
-
-if(
-
-Math.random()
-
-<
-
-GRAB_CHANCE
-
-){
-
-p.grabbed=true;
-
-}
-
-return;
-
-}
-
-}
-
-}
-
-
-
-function updateClaw(){
-
-if(dropping){
-
-clawY+=8;
-
-checkCatch();
-
-if(
-
-clawY>=420
-
-){
-
-dropping=false;
-
-rising=true;
-
-}
-
-}
-
-if(rising){
-
-clawY-=8;
-
-if(
-
-clawY<=0
-
-){
-
-clawY=0;
-
-rising=false;
-
-completeGrab();
-
-}
-
-}
-
-}
-
-
-
-function completeGrab(){
-
-let success=false;
-
-for(
-
-const p of prizes
-
-){
-
-if(
-
-p.grabbed
-
-){
-
-success=true;
-
-p.grabbed=false;
-
-p.caught=true;
-
-player.prizes++;
-
-player.streak++;
-
-player.collection[p.name] ??= 0;
-
-player.collection[p.name]++;
-
-evaluateAchievements();
-
-updateHUD();
-
-saveLocal();
-
-setMessage(
-
-`Caught ${p.name}`
-
-);
-
-break;
-
-}
-
-}
-
-if(!success){
-
-player.streak=0;
-
-updateHUD();
-
-setMessage(
-
-"MISS"
-
-);
-
-}
-
-}
-
-
-function drawMachine(ctx){
-
-ctx.fillStyle="#111";
-
-ctx.fillRect(
-
-0,0,
-
-GAME_WIDTH,
-
-GAME_HEIGHT
-
-);
-
-ctx.strokeStyle="#666";
-
-ctx.lineWidth=8;
-
-ctx.strokeRect(
-
-10,10,
-
-780,480
-
-);
-
-ctx.fillStyle="#444";
-
-ctx.fillRect(
-
-0,440,
-
-800,60
-
-);
-
-ctx.strokeStyle="white";
-
-ctx.lineWidth=3;
-
-ctx.beginPath();
-
-ctx.moveTo(
-
-clawX,
-
-20
-
-);
-
-ctx.lineTo(
-
-clawX,
-
-clawY
-
-);
-
-ctx.stroke();
-
-ctx.fillStyle="white";
-
-ctx.fillRect(
-
-clawX-20,
-
-clawY,
-
-40,
-
-15
-
-);
-
-}
-
-
-
-function drawPrizes(ctx){
-
-ctx.font="28px Arial";
-
-for(
-
-const p of prizes
-
-){
-
-if(
-
-p.caught
-
-) continue;
-
-let drawY=p.y;
-
-if(
-
-p.grabbed
-
-){
-
-drawY=
-
-clawY+35;
-
-p.x=clawX;
-
-}
-
-ctx.fillText(
-
-p.emoji,
-
-p.x,
-
-drawY
-
-);
-
-}
-
-}
-
-
-
-function drawMessages(ctx){
-
-if(
-
-floatingTimer<=0
-
-){
-
-return;
-
-}
-
-ctx.fillStyle="white";
-
-ctx.font="30px Arial";
-
-ctx.textAlign="center";
-
-ctx.fillText(
-
-floatingText,
-
-400,
-
-100
-
-);
-
-floatingTimer--;
-
-}
-
-
-
-function loop(ctx){
+function animate(){
 
 requestAnimationFrame(
 
-()=>loop(ctx)
+animate
 
 );
 
-updateClaw();
+renderer.render(
 
-drawMachine(ctx);
+scene,
 
-drawPrizes(ctx);
+camera
 
-drawMessages(ctx);
+);
 
 }
