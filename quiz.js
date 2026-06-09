@@ -1,8 +1,8 @@
-let currentQuestion=null;
+let currentQuestion = null;
 
-let selectedAnswer=null;
+let selectedAnswer = null;
 
-let pendingReward=0;
+let pendingReward = 0;
 
 
 
@@ -10,7 +10,7 @@ function showTopUpMenu(){
 
 document.getElementById(
 "topup-modal"
-).style.display="block";
+).style.display = "block";
 
 }
 
@@ -28,11 +28,11 @@ pendingReward = reward;
 
 document.getElementById(
 "topup-modal"
-).style.display="none";
+).style.display = "none";
 
 document.getElementById(
 "quiz-modal"
-).style.display="block";
+).style.display = "block";
 
 loadQuestion();
 
@@ -42,7 +42,11 @@ loadQuestion();
 
 function loadQuestion(){
 
-const levels =
+selectedAnswer = null;
+
+
+
+const pool =
 
 QUESTIONS[
 player.studentClass
@@ -52,14 +56,14 @@ player.studentClass
 
 if(
 
-!levels ||
+!pool ||
 
-levels.length===0
+pool.length===0
 
 ){
 
 alert(
-"No questions loaded"
+"No questions found"
 );
 
 return;
@@ -70,14 +74,14 @@ return;
 
 currentQuestion =
 
-levels[
+pool[
 Math.floor(
 
 Math.random()
 
 *
 
-levels.length
+pool.length
 
 )
 
@@ -85,13 +89,11 @@ levels.length
 
 
 
-selectedAnswer = null;
-
-
-
 document.getElementById(
 "question-title"
-).innerText="Question";
+).innerText=
+
+"Science Question";
 
 
 
@@ -103,35 +105,41 @@ currentQuestion.question;
 
 
 
-const answerArea=
+const area =
 
 document.getElementById(
 "answer-area"
 );
 
-answerArea.innerHTML="";
+area.innerHTML = "";
 
 
 
-currentQuestion.options.forEach(
+for(
 
-option=>{
+const option of currentQuestion.options
 
-const btn=
+){
+
+const btn =
 
 document.createElement(
 "button"
 );
 
-btn.innerText=option;
+btn.innerText = option;
 
 btn.style.display="block";
 
-btn.style.margin="10px 0";
+btn.style.margin="8px 0";
 
-btn.onclick=()=>{
+btn.style.width="100%";
 
-selectedAnswer=option;
+
+
+btn.onclick = ()=>{
+
+selectedAnswer = option;
 
 
 
@@ -143,7 +151,11 @@ document
 
 .forEach(
 
-b=>b.style.background=""
+b=>{
+
+b.style.background="";
+
+}
 
 );
 
@@ -151,19 +163,17 @@ b=>b.style.background=""
 
 btn.style.background=
 
-"lightgreen";
+"lime";
 
 };
 
 
 
-answerArea.appendChild(
+area.appendChild(
 btn
 );
 
 }
-
-);
 
 }
 
@@ -178,7 +188,7 @@ selectedAnswer===null
 ){
 
 alert(
-"Choose answer"
+"Select an answer first"
 );
 
 return;
@@ -215,13 +225,11 @@ pendingReward +
 
 }
 
-
-
 else{
 
 alert(
 
-"Wrong Answer"
+"Wrong answer"
 
 );
 
