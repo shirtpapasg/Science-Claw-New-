@@ -1,17 +1,16 @@
-let currentReward=0;
-
 let currentQuestion=null;
+
+let selectedAnswer=null;
+
+let pendingReward=0;
 
 
 
 function showTopUpMenu(){
 
-document
-.getElementById(
+document.getElementById(
 "topup-modal"
-)
-.style.display=
-"block";
+).style.display="block";
 
 }
 
@@ -19,27 +18,21 @@ document
 
 function startQuiz(
 
-questions,
+questionCount,
 
 reward
 
 ){
 
-currentReward=reward;
+pendingReward = reward;
 
-document
-.getElementById(
+document.getElementById(
 "topup-modal"
-)
-.style.display=
-"none";
+).style.display="none";
 
-document
-.getElementById(
+document.getElementById(
 "quiz-modal"
-)
-.style.display=
-"block";
+).style.display="block";
 
 loadQuestion();
 
@@ -49,74 +42,124 @@ loadQuestion();
 
 function loadQuestion(){
 
-const pool =
+const levels =
 
 QUESTIONS[
 player.studentClass
 ];
 
-currentQuestion=
 
-pool[
 
+if(
+
+!levels ||
+
+levels.length===0
+
+){
+
+alert(
+"No questions loaded"
+);
+
+return;
+
+}
+
+
+
+currentQuestion =
+
+levels[
 Math.floor(
 
 Math.random()
 
-* pool.length
+*
+
+levels.length
 
 )
 
 ];
 
-document
-.getElementById(
+
+
+selectedAnswer = null;
+
+
+
+document.getElementById(
 "question-title"
-)
-.innerText=
+).innerText="Question";
 
-currentQuestion.topic;
 
-document
-.getElementById(
+
+document.getElementById(
 "question-text"
-)
-.innerText=
+).innerText=
 
 currentQuestion.question;
 
-const area=
 
-document
-.getElementById(
+
+const answerArea=
+
+document.getElementById(
 "answer-area"
 );
 
-area.innerHTML="";
+answerArea.innerHTML="";
 
-currentQuestion.options
-.forEach(
+
+
+currentQuestion.options.forEach(
 
 option=>{
 
-area.innerHTML +=
+const btn=
 
-`
+document.createElement(
+"button"
+);
 
-<label>
+btn.innerText=option;
 
-<input
-type="radio"
-name="ans"
-value="${option}">
+btn.style.display="block";
 
-${option}
+btn.style.margin="10px 0";
 
-</label>
+btn.onclick=()=>{
 
-<br>
+selectedAnswer=option;
 
-`;
+
+
+document
+
+.querySelectorAll(
+"#answer-area button"
+)
+
+.forEach(
+
+b=>b.style.background=""
+
+);
+
+
+
+btn.style.background=
+
+"lightgreen";
+
+};
+
+
+
+answerArea.appendChild(
+btn
+);
 
 }
 
@@ -128,59 +171,29 @@ ${option}
 
 function submitAnswer(){
 
-const selected=
-
-document.querySelector(
-
-'input[name="ans"]:checked'
-
-);
-
 if(
 
-!selected
+selectedAnswer===null
 
 ){
 
 alert(
-
 "Choose answer"
-
 );
 
 return;
 
 }
 
+
+
 player.questionsAttempted++;
 
-const topic=
 
-currentQuestion.topic;
 
 if(
 
-!player.topicStats[topic]
-
-){
-
-player.topicStats[topic]={
-
-attempted:0,
-
-correct:0
-
-};
-
-}
-
-player.topicStats[
-topic
-].attempted++;
-
-if(
-
-selected.value===
+selectedAnswer===
 
 currentQuestion.correct
 
@@ -188,31 +201,42 @@ currentQuestion.correct
 
 player.questionsCorrect++;
 
-player.credits+=currentReward;
+player.credits += pendingReward;
 
-player.streak++;
+alert(
 
-player.topicStats[
-topic
-].correct++;
+"Correct! +" +
+
+pendingReward +
+
+" credits"
+
+);
 
 }
+
+
 
 else{
 
-player.streak=0;
+alert(
+
+"Wrong Answer"
+
+);
 
 }
+
+
 
 updateHUD();
 
 saveLocal();
 
-document
-.getElementById(
+
+
+document.getElementById(
 "quiz-modal"
-)
-.style.display=
-"none";
+).style.display="none";
 
 }
