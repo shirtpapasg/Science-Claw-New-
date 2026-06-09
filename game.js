@@ -380,6 +380,10 @@ player.prizes++;
 
 player.streak++;
 
+player.collection[p.name] ??= 0;
+
+player.collection[p.name]++;
+
 updateHUD();
 
 saveLocal();
@@ -396,21 +400,13 @@ break;
 
 }
 
-if(
-
-!success
-
-){
+if(!success){
 
 player.streak=0;
 
 updateHUD();
 
-setMessage(
-
-"MISS"
-
-);
+setMessage("MISS");
 
 }
 
