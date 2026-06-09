@@ -1,22 +1,24 @@
 let player = {
 
-name: "",
+name:"",
 
-studentClass: "",
+studentClass:"",
 
-credits: 0,
+credits:0,
 
-streak: 0,
+streak:0,
 
-prizes: 0,
+prizes:0,
 
-questionsCorrect: 0,
+questionsCorrect:0,
 
-questionsAttempted: 0,
+questionsAttempted:0,
 
-topicStats: {},
+topicStats:{},
 
-collection: {}
+collection:{},
+
+achievements:{}
 
 };
 
@@ -26,15 +28,19 @@ function authorizeStudentLogin(){
 
 player.name =
 
-document.getElementById(
+document
+.getElementById(
 "student-name"
-).value;
+)
+.value;
 
 player.studentClass =
 
-document.getElementById(
+document
+.getElementById(
 "student-class"
-).value;
+)
+.value;
 
 if(
 
@@ -56,7 +62,7 @@ document
 .getElementById(
 "registration-screen"
 )
-.style.display =
+.style.display=
 "none";
 
 updateHUD();
@@ -105,11 +111,13 @@ player.topicStats ??= {};
 
 player.collection ??= {};
 
+player.achievements ??= {};
+
 document
 .getElementById(
 "registration-screen"
 )
-.style.display =
+.style.display=
 "none";
 
 updateHUD();
