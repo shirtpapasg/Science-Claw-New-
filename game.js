@@ -384,6 +384,8 @@ player.collection[p.name] ??= 0;
 
 player.collection[p.name]++;
 
+evaluateAchievements();
+
 updateHUD();
 
 saveLocal();
@@ -406,12 +408,15 @@ player.streak=0;
 
 updateHUD();
 
-setMessage("MISS");
+setMessage(
+
+"MISS"
+
+);
 
 }
 
 }
-
 
 
 function drawMachine(ctx){
