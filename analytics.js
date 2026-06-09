@@ -48,8 +48,6 @@ unlockAchievement(
 
 }
 
-
-
 if(
 
 player.prizes >= 20
@@ -66,8 +64,6 @@ unlockAchievement(
 
 }
 
-
-
 if(
 
 player.streak >= 5
@@ -83,8 +79,6 @@ unlockAchievement(
 );
 
 }
-
-
 
 const uniqueItems =
 
@@ -114,9 +108,145 @@ unlockAchievement(
 
 
 
+function getAccuracy(){
+
+if(
+
+player.questionsAttempted===0
+
+){
+
+return 0;
+
+}
+
+return Math.round(
+
+player.questionsCorrect /
+
+player.questionsAttempted
+
+*100
+
+);
+
+}
+
+
+
+function getWeakTopics(){
+
+const weak=[];
+
+for(
+
+const topic in player.topicStats
+
+){
+
+const stats=
+
+player.topicStats[
+topic
+];
+
+const percent=
+
+Math.round(
+
+stats.correct /
+
+stats.attempted
+
+*100
+
+);
+
+if(
+
+percent < 70
+
+){
+
+weak.push(
+
+`${topic} (${percent}%)`
+
+);
+
+}
+
+}
+
+return weak;
+
+}
+
+
+
+function openDashboard(){
+
+let weakTopics=
+
+getWeakTopics();
+
+if(
+
+weakTopics.length===0
+
+){
+
+weakTopics=["None"];
+
+}
+
+alert(
+
+`
+
+Student:
+
+${player.name}
+
+Class:
+
+${player.studentClass}
+
+Accuracy:
+
+${getAccuracy()}%
+
+Credits:
+
+${player.credits}
+
+Prizes:
+
+${player.prizes}
+
+Achievements:
+
+${Object.keys(player.achievements).length}
+
+Collection:
+
+${Object.keys(player.collection).length}
+
+Weak Topics:
+
+${weakTopics.join(", ")}
+
+`
+
+);
+
+}
+
+
+
 function saveGameReport(){
 
-const blob =
+const blob=
 
 new Blob(
 
@@ -144,7 +274,7 @@ type:
 
 );
 
-const link =
+const link=
 
 document.createElement(
 "a"
