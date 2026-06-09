@@ -12,6 +12,8 @@ let prizes=[];
 
 let particles=[];
 
+let grabbedPrize=null;
+
 let clawX=0;
 
 let clawY=4;
@@ -20,41 +22,39 @@ let dropping=false;
 
 let rising=false;
 
-let grabbedPrize=null;
+let shake=0;
+
+
+
+const pickupAudio =
+
+new Audio(
+
+"https://actions.google.com/sounds/v1/cartoon/pop.ogg"
+
+);
+
+const missAudio =
+
+new Audio(
+
+"https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
+
+);
 
 
 
 const SCIENCE_TYPES=[
 
-{
-name:"Battery",
-color:0xffff00,
-shape:"box"
-},
+{name:"Battery",color:0xffff00,shape:"box"},
 
-{
-name:"Atom",
-color:0x66ccff,
-shape:"sphere"
-},
+{name:"Atom",color:0x66ccff,shape:"sphere"},
 
-{
-name:"Plant",
-color:0x55ff55,
-shape:"cone"
-},
+{name:"Plant",color:0x55ff55,shape:"cone"},
 
-{
-name:"Magnet",
-color:0xff5555,
-shape:"cylinder"
-},
+{name:"Magnet",color:0xff5555,shape:"cylinder"},
 
-{
-name:"Crystal",
-color:0xff66ff,
-shape:"diamond"
-}
+{name:"Crystal",color:0xff66ff,shape:"diamond"}
 
 ];
 
@@ -107,16 +107,6 @@ camera.position.set(
 7,
 
 13
-
-);
-
-camera.lookAt(
-
-0,
-
-1,
-
-0
 
 );
 
@@ -232,7 +222,7 @@ new THREE.MeshPhongMaterial({
 
 transparent:true,
 
-opacity:0.15,
+opacity:.15,
 
 color:0x88ccff
 
@@ -254,11 +244,7 @@ new THREE.Mesh(
 
 new THREE.BoxGeometry(
 
-10,
-
-0.3,
-
-8
+10,.3,8
 
 ),
 
@@ -284,11 +270,7 @@ new THREE.Mesh(
 
 new THREE.BoxGeometry(
 
-0.8,
-
-0.5,
-
-0.8
+0.8,.5,.8
 
 ),
 
@@ -302,11 +284,7 @@ color:0xffffff
 
 claw.position.set(
 
-0,
-
-4,
-
-0
+0,4,0
 
 );
 
@@ -365,8 +343,6 @@ return new THREE.OctahedronGeometry(.4);
 function spawnPrizes(){
 
 prizes=[];
-
-
 
 for(
 
@@ -538,6 +514,8 @@ player.credits<=0
 
 ){
 
+missAudio.play();
+
 return;
 
 }
@@ -620,68 +598,6 @@ return;
 
 
 
-function spawnParticles(x,y,z){
-
-for(
-
-let i=0;
-
-i<15;
-
-i++
-
-){
-
-const p=
-
-new THREE.Mesh(
-
-new THREE.SphereGeometry(.05),
-
-new THREE.MeshBasicMaterial({
-
-color:0xffff00
-
-})
-
-);
-
-
-
-p.position.set(
-
-x,y,z
-
-);
-
-
-
-p.userData={
-
-vx:(Math.random()-.5)*.1,
-
-vy:Math.random()*.1,
-
-life:60
-
-};
-
-
-
-scene.add(
-p
-);
-
-particles.push(
-p
-);
-
-}
-
-}
-
-
-
 function updateClaw(){
 
 if(dropping){
@@ -714,9 +630,13 @@ claw.position.y=clawY;
 
 if(grabbedPrize){
 
-grabbedPrize.position.x=claw.position.x;
+grabbedPrize.position.x=
 
-grabbedPrize.position.y=claw.position.y-.6;
+claw.position.x;
+
+grabbedPrize.position.y=
+
+claw.position.y-.6;
 
 }
 
@@ -732,6 +652,10 @@ rising=false;
 
 if(grabbedPrize){
 
+pickupAudio.play();
+
+shake=20;
+
 grabbedPrize.userData.caught=true;
 
 player.prizes++;
@@ -745,16 +669,6 @@ grabbedPrize.userData.type
 player.collection[
 grabbedPrize.userData.type
 ]++;
-
-spawnParticles(
-
-grabbedPrize.position.x,
-
-grabbedPrize.position.y,
-
-grabbedPrize.position.z
-
-);
 
 evaluateAchievements?.();
 
@@ -800,37 +714,51 @@ claw.position.y,
 
 
 
-function updateParticles(){
+function updateCamera(){
 
-particles=
+const wobble =
 
-particles.filter(
+Math.sin(
 
-p=>{
+Date.now()*.001
 
-p.position.x+=p.userData.vx;
+)*0.2;
 
-p.position.y+=p.userData.vy;
 
-p.userData.life--;
+
+camera.position.x=
+
+wobble;
+
+
 
 if(
 
-p.userData.life<=0
+shake>0
 
 ){
 
-scene.remove(
-p
-);
+camera.position.x +=
 
-return false;
+(Math.random()-.5)*0.2;
+
+camera.position.y +=
+
+(Math.random()-.5)*0.2;
+
+shake--;
 
 }
 
-return true;
 
-}
+
+camera.lookAt(
+
+0,
+
+1,
+
+0
 
 );
 
@@ -848,7 +776,7 @@ animate
 
 updateClaw();
 
-updateParticles();
+updateCamera();
 
 renderer.render(
 
