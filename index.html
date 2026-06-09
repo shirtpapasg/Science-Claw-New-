@@ -18,6 +18,8 @@ Science Claw New
 <link rel="stylesheet"
 href="style.css">
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
 </head>
 
 <body>
@@ -25,11 +27,7 @@ href="style.css">
 
 <div id="registration-screen">
 
-<h1>
-
-SCIENCE CLAW NEW
-
-</h1>
+<h1>SCIENCE CLAW NEW</h1>
 
 <input
 id="student-name"
@@ -39,29 +37,10 @@ placeholder="Student Name">
 
 <select id="student-class">
 
-<option value="P3">
-
-Primary 3
-
-</option>
-
-<option value="P4">
-
-Primary 4
-
-</option>
-
-<option value="P5">
-
-Primary 5
-
-</option>
-
-<option value="P6">
-
-Primary 6
-
-</option>
+<option value="P3">Primary 3</option>
+<option value="P4">Primary 4</option>
+<option value="P5">Primary 5</option>
+<option value="P6">Primary 6</option>
 
 </select>
 
@@ -76,27 +55,18 @@ Enter Machine
 </div>
 
 
+<div id="canvas-container"></div>
 
-<div id="ui-layer"
-style="display:block;">
 
 <div class="hud">
 
-<p id="player-hud-tag">
-
-Guest
-
-</p>
+<p id="player-hud-tag">Guest</p>
 
 <p>
 
 Credits:
 
-<span id="credit-display">
-
-0
-
-</span>
+<span id="credit-display">0</span>
 
 </p>
 
@@ -104,11 +74,7 @@ Credits:
 
 Streak:
 
-<span id="streak-display">
-
-0
-
-</span>
+<span id="streak-display">0</span>
 
 </p>
 
@@ -116,11 +82,7 @@ Streak:
 
 Prizes:
 
-<span id="prizes-display">
-
-0
-
-</span>
+<span id="prizes-display">0</span>
 
 </p>
 
@@ -128,20 +90,9 @@ Prizes:
 
 Accuracy:
 
-<span id="accuracy-display">
-
-0%
-
-</span>
+<span id="accuracy-display">0%</span>
 
 </p>
-
-
-<button onclick="playMachine()">
-
-Play Machine
-
-</button>
 
 <button onclick="showTopUpMenu()">
 
@@ -169,24 +120,8 @@ Switch Player
 
 </div>
 
-</div>
 
-
-
-<div id="canvas-container">
-
-</div>
-
-
-
-<div id="topup-modal"
-style="display:none;">
-
-<h2>
-
-Earn Credits
-
-</h2>
+<div id="topup-modal" style="display:none;">
 
 <button onclick="startQuiz(5,5)">
 
@@ -195,7 +130,6 @@ Earn Credits
 </button>
 
 </div>
-
 
 
 <div id="quiz-modal"
@@ -207,13 +141,9 @@ Question
 
 </h2>
 
-<p id="question-text">
+<p id="question-text"></p>
 
-</p>
-
-<div id="answer-area">
-
-</div>
+<div id="answer-area"></div>
 
 <button onclick="submitAnswer()">
 
@@ -222,7 +152,6 @@ Submit
 </button>
 
 </div>
-
 
 
 <script src="questions.js"></script>
