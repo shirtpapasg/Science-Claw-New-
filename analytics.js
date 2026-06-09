@@ -1,85 +1,28 @@
-let player = {
+function unlockAchievement(
 
-name:"",
+id,
 
-studentClass:"",
-
-credits:0,
-
-streak:0,
-
-prizes:0,
-
-questionsCorrect:0,
-
-questionsAttempted:0,
-
-topicStats:{}
-
-};
-
-
-
-function authorizeStudentLogin(){
-
-player.name =
-
-document
-.getElementById(
-"student-name"
-)
-.value;
-
-player.studentClass =
-
-document
-.getElementById(
-"student-class"
-)
-.value;
-
-if(
-
-player.name.trim()===""
+label
 
 ){
 
-alert(
+if(
 
-"Enter your name"
+player.achievements[id]
 
-);
+){
 
 return;
 
 }
 
-player.credits = 3;
-
-document
-.getElementById(
-"registration-screen"
-)
-.style.display=
-"none";
-
-updateHUD();
-
-initGame();
+player.achievements[id]=true;
 
 saveLocal();
 
-}
+setMessage(
 
-
-
-function saveLocal(){
-
-localStorage.setItem(
-
-"sciencePlayer",
-
-JSON.stringify(player)
+`🏆 ${label}`
 
 );
 
@@ -87,59 +30,136 @@ JSON.stringify(player)
 
 
 
-function loadLocal(){
-
-const data =
-
-localStorage.getItem(
-"sciencePlayer"
-);
+function evaluateAchievements(){
 
 if(
 
-!data
+player.prizes >= 5
 
 ){
 
-return;
+unlockAchievement(
 
-}
+"collector5",
 
-player =
-
-JSON.parse(data);
-
-document
-.getElementById(
-"registration-screen"
-)
-.style.display=
-"none";
-
-updateHUD();
-
-initGame();
-
-}
-
-
-
-function resetPlayer(){
-
-localStorage.removeItem(
-
-"sciencePlayer"
+"Collected 5 Items"
 
 );
 
-location.reload();
+}
+
+
+
+if(
+
+player.prizes >= 20
+
+){
+
+unlockAchievement(
+
+"collector20",
+
+"Master Collector"
+
+);
 
 }
 
 
 
-window.onload=()=>{
+if(
 
-loadLocal();
+player.streak >= 5
 
-};
+){
+
+unlockAchievement(
+
+"streak5",
+
+"Hot Streak"
+
+);
+
+}
+
+
+
+const uniqueItems =
+
+Object.keys(
+
+player.collection
+
+).length;
+
+if(
+
+uniqueItems >= 5
+
+){
+
+unlockAchievement(
+
+"scienceSet",
+
+"Scientist Collection"
+
+);
+
+}
+
+}
+
+
+
+function saveGameReport(){
+
+const blob =
+
+new Blob(
+
+[
+
+JSON.stringify(
+
+player,
+
+null,
+
+2
+
+)
+
+],
+
+{
+
+type:
+
+"application/json"
+
+}
+
+);
+
+const link =
+
+document.createElement(
+"a"
+);
+
+link.href=
+
+URL.createObjectURL(
+blob
+);
+
+link.download=
+
+`${player.name}_report.json`;
+
+link.click();
+
+}
