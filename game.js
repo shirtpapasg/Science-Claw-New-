@@ -6,9 +6,11 @@ let renderer;
 
 let claw;
 
-let prizes=[];
+let machine;
 
-let clawX=0;
+let prizes = [];
+
+let clawX = 0;
 
 
 
@@ -40,7 +42,7 @@ camera =
 
 new THREE.PerspectiveCamera(
 
-75,
+70,
 
 window.innerWidth /
 
@@ -58,7 +60,17 @@ camera.position.set(
 
 8,
 
-14
+15
+
+);
+
+camera.lookAt(
+
+0,
+
+2,
+
+0
 
 );
 
@@ -88,6 +100,22 @@ renderer.domElement
 
 
 
+const ambient =
+
+new THREE.AmbientLight(
+
+0xffffff,
+
+1.5
+
+);
+
+scene.add(
+ambient
+);
+
+
+
 const light =
 
 new THREE.PointLight(
@@ -108,11 +136,41 @@ light.position.set(
 
 );
 
-scene.add(light);
+scene.add(
+light
+);
 
 
 
-const machine =
+buildMachine();
+
+spawnPrizes();
+
+document.removeEventListener(
+
+"keydown",
+
+controls
+
+);
+
+document.addEventListener(
+
+"keydown",
+
+controls
+
+);
+
+animate();
+
+}
+
+
+
+function buildMachine(){
+
+machine =
 
 new THREE.Mesh(
 
@@ -128,15 +186,19 @@ new THREE.BoxGeometry(
 
 new THREE.MeshPhongMaterial({
 
-wireframe:true
+wireframe:true,
+
+color:0xffffff
 
 })
 
 );
 
-machine.position.y=2;
+machine.position.y = 2;
 
-scene.add(machine);
+scene.add(
+machine
+);
 
 
 
@@ -146,11 +208,11 @@ new THREE.Mesh(
 
 new THREE.BoxGeometry(
 
-0.8,
+1,
 
 0.4,
 
-0.8
+1
 
 ),
 
@@ -162,25 +224,19 @@ color:0xffffff
 
 );
 
-claw.position.y=4;
+claw.position.set(
 
-scene.add(claw);
+0,
 
+4,
 
-
-spawnPrizes();
-
-document.addEventListener(
-
-"keydown",
-
-controls
+0
 
 );
 
-
-
-animate();
+scene.add(
+claw
+);
 
 }
 
@@ -188,11 +244,13 @@ animate();
 
 function spawnPrizes(){
 
+prizes=[];
+
 for(
 
 let i=0;
 
-i<12;
+i<15;
 
 i++
 
@@ -204,7 +262,11 @@ new THREE.Mesh(
 
 new THREE.SphereGeometry(
 
-0.3
+0.3,
+
+16,
+
+16
 
 ),
 
@@ -230,9 +292,13 @@ prize.position.set(
 
 );
 
-scene.add(prize);
+scene.add(
+prize
+);
 
-prizes.push(prize);
+prizes.push(
+prize
+);
 
 }
 
@@ -248,7 +314,7 @@ e.key==="ArrowLeft"
 
 ){
 
-clawX -=0.5;
+clawX -= 0.5;
 
 }
 
@@ -258,13 +324,29 @@ e.key==="ArrowRight"
 
 ){
 
-clawX +=0.5;
+clawX += 0.5;
 
 }
 
-claw.position.x=
 
-clawX;
+
+clawX =
+
+Math.max(
+
+-4,
+
+Math.min(
+
+4,
+
+clawX
+
+)
+
+);
+
+claw.position.x = clawX;
 
 }
 
