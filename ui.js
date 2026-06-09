@@ -1,250 +1,191 @@
 function updateHUD(){
 
-document
-.getElementById(
-"player-hud-tag"
-)
-.innerText=
-player.name;
+const accuracy =
 
-document
-.getElementById(
-"credit-display"
-)
-.innerText=
-player.credits;
+player.questionsAttempted===0
 
-document
-.getElementById(
-"streak-display"
-)
-.innerText=
-player.streak;
+?
 
-document
-.getElementById(
-"prizes-display"
-)
-.innerText=
-player.prizes;
+0
 
-let accuracy = 0;
+:
 
-if(
+Math.round(
 
-player.questionsAttempted > 0
+player.questionsCorrect
 
-){
-
-accuracy = Math.round(
-
-player.questionsCorrect /
+/
 
 player.questionsAttempted
 
-*100
+*
+
+100
 
 );
 
-}
 
-document
-.getElementById(
+
+document.getElementById(
+"player-hud-tag"
+).innerText=
+
+player.name || "Guest";
+
+
+
+document.getElementById(
+"credit-display"
+).innerText=
+
+player.credits;
+
+
+
+document.getElementById(
+"streak-display"
+).innerText=
+
+player.streak;
+
+
+
+document.getElementById(
+"prizes-display"
+).innerText=
+
+player.prizes;
+
+
+
+document.getElementById(
 "accuracy-display"
-)
-.innerText=
-accuracy+"%";
+).innerText=
 
-renderInstructions();
+accuracy + "%";
 
-renderCollection();
 
-renderAchievements();
+
+renderCollectionBook();
 
 }
 
 
 
-function renderInstructions(){
+function renderCollectionBook(){
 
-let box=
+let panel =
 
 document.getElementById(
-"instructions-box"
+"collection-panel"
 );
 
-if(!box){
 
-box=
+
+if(!panel){
+
+panel =
+
 document.createElement(
 "div"
 );
 
-box.id=
-"instructions-box";
+panel.id =
+"collection-panel";
 
-box.style.position=
+panel.style.position =
 "fixed";
 
-box.style.bottom=
+panel.style.top =
 "20px";
 
-box.style.right=
+panel.style.right =
 "20px";
 
-box.style.background=
-"black";
+panel.style.width =
+"260px";
 
-box.style.padding=
-"12px";
+panel.style.background =
+"rgba(0,0,0,0.85)";
 
-box.style.color=
+panel.style.color =
 "white";
 
-document.body.appendChild(
-box
-);
+panel.style.padding =
+"15px";
 
-}
-
-box.innerHTML=
-
-`
-
-⬅️ ➡️ Move
-
-<br>
-
-SPACE Drop
-
-`;
-
-}
-
-
-
-function renderCollection(){
-
-let box=
-
-document.getElementById(
-"collection-box"
-);
-
-if(!box){
-
-box=
-document.createElement(
-"div"
-);
-
-box.id=
-"collection-box";
-
-box.style.position=
-"fixed";
-
-box.style.top=
-"20px";
-
-box.style.right=
-"20px";
-
-box.style.background=
-"black";
-
-box.style.padding=
+panel.style.borderRadius =
 "12px";
 
-box.style.color=
-"white";
+panel.style.zIndex =
+"50";
 
 document.body.appendChild(
-box
+panel
 );
 
 }
 
-let html=
 
-"<b>Collection</b><br>";
+
+const allItems = [
+
+"Battery",
+
+"Atom",
+
+"Plant",
+
+"Magnet",
+
+"Crystal"
+
+];
+
+
+
+let html =
+
+"<h3>Science Collection</h3>";
+
+
 
 for(
 
-const item in player.collection
+const item of allItems
+
+){
+
+const count =
+
+player.collection?.[item] || 0;
+
+
+
+if(
+
+count > 0
 
 ){
 
 html +=
 
-`${item}: ${player.collection[item]}<br>`;
+`✅ ${item} x${count}<br>`;
 
 }
 
-box.innerHTML=html;
-
-}
-
-
-
-function renderAchievements(){
-
-let box=
-
-document.getElementById(
-"achievement-box"
-);
-
-if(!box){
-
-box=
-document.createElement(
-"div"
-);
-
-box.id=
-"achievement-box";
-
-box.style.position=
-"fixed";
-
-box.style.left=
-"20px";
-
-box.style.bottom=
-"20px";
-
-box.style.background=
-"black";
-
-box.style.padding=
-"12px";
-
-box.style.color=
-"gold";
-
-document.body.appendChild(
-box
-);
-
-}
-
-let html=
-
-"<b>Badges</b><br>";
-
-for(
-
-const badge in player.achievements
-
-){
+else{
 
 html +=
 
-`🏆 ${badge}<br>`;
+`⬜ ${item}<br>`;
 
 }
 
-box.innerHTML=html;
+}
+
+
+
+panel.innerHTML = html;
 
 }
