@@ -40,13 +40,29 @@ placeholder="Student Name">
 
 <select id="student-class">
 
-<option value="P3">Primary 3</option>
+<option value="P3">
 
-<option value="P4">Primary 4</option>
+Primary 3
 
-<option value="P5">Primary 5</option>
+</option>
 
-<option value="P6">Primary 6</option>
+<option value="P4">
+
+Primary 4
+
+</option>
+
+<option value="P5">
+
+Primary 5
+
+</option>
+
+<option value="P6">
+
+Primary 6
+
+</option>
 
 </select>
 
@@ -61,16 +77,26 @@ Enter Machine
 </div>
 
 
+
 <div id="canvas-container">
 
 </div>
 
 
+
+<div id="ui-layer">
+
 <div class="hud">
 
-<p id="player-hud-tag">
+<p>
+
+Player:
+
+<span id="player-hud-tag">
 
 Guest
+
+</span>
 
 </p>
 
@@ -148,9 +174,39 @@ Switch Player
 
 </div>
 
+</div>
+
+
 
 <div id="topup-modal"
-style="display:none;">
+
+style="
+
+display:none;
+
+position:fixed;
+
+top:50%;
+
+left:50%;
+
+transform:translate(-50%,-50%);
+
+background:black;
+
+padding:20px;
+
+color:white;
+
+z-index:999;
+
+">
+
+<h2>
+
+Earn Credits
+
+</h2>
 
 <button onclick="startQuiz(5,5)">
 
@@ -158,11 +214,41 @@ style="display:none;">
 
 </button>
 
+<br><br>
+
+<button onclick="document.getElementById('topup-modal').style.display='none'">
+
+Close
+
+</button>
+
 </div>
 
 
+
 <div id="quiz-modal"
-style="display:none;">
+
+style="
+
+display:none;
+
+position:fixed;
+
+top:50%;
+
+left:50%;
+
+transform:translate(-50%,-50%);
+
+background:black;
+
+padding:20px;
+
+color:white;
+
+z-index:999;
+
+">
 
 <h2 id="question-title">
 
@@ -170,9 +256,13 @@ Question
 
 </h2>
 
-<p id="question-text"></p>
+<p id="question-text">
 
-<div id="answer-area"></div>
+</p>
+
+<div id="answer-area">
+
+</div>
 
 <button onclick="submitAnswer()">
 
@@ -181,6 +271,7 @@ Submit
 </button>
 
 </div>
+
 
 
 <script src="questions.js"></script>
