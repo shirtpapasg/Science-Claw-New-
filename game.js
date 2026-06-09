@@ -10,6 +10,8 @@ let cable;
 
 let prizes=[];
 
+let particles=[];
+
 let clawX=0;
 
 let clawY=4;
@@ -19,6 +21,42 @@ let dropping=false;
 let rising=false;
 
 let grabbedPrize=null;
+
+
+
+const SCIENCE_TYPES=[
+
+{
+name:"Battery",
+color:0xffff00,
+shape:"box"
+},
+
+{
+name:"Atom",
+color:0x66ccff,
+shape:"sphere"
+},
+
+{
+name:"Plant",
+color:0x55ff55,
+shape:"cone"
+},
+
+{
+name:"Magnet",
+color:0xff5555,
+shape:"cylinder"
+},
+
+{
+name:"Crystal",
+color:0xff66ff,
+shape:"diamond"
+}
+
+];
 
 
 
@@ -41,7 +79,7 @@ new THREE.Scene();
 scene.background=
 
 new THREE.Color(
-0x0f1720
+0x101820
 );
 
 
@@ -50,7 +88,7 @@ camera=
 
 new THREE.PerspectiveCamera(
 
-70,
+65,
 
 window.innerWidth/
 
@@ -66,9 +104,9 @@ camera.position.set(
 
 0,
 
-8,
+7,
 
-14
+13
 
 );
 
@@ -108,7 +146,7 @@ renderer.domElement
 
 
 
-const ambient=
+scene.add(
 
 new THREE.AmbientLight(
 
@@ -116,10 +154,8 @@ new THREE.AmbientLight(
 
 1.8
 
-);
+)
 
-scene.add(
-ambient
 );
 
 
@@ -136,7 +172,7 @@ new THREE.PointLight(
 
 light.position.set(
 
-4,
+5,
 
 10,
 
@@ -194,11 +230,11 @@ new THREE.BoxGeometry(
 
 new THREE.MeshPhongMaterial({
 
-color:0x66ccff,
-
 transparent:true,
 
-opacity:0.18
+opacity:0.15,
+
+color:0x88ccff
 
 })
 
@@ -220,7 +256,7 @@ new THREE.BoxGeometry(
 
 10,
 
-0.2,
+0.3,
 
 8
 
@@ -280,23 +316,11 @@ claw
 
 
 
-const cableGeo=
-
-new THREE.BufferGeometry();
-
-cableGeo.setFromPoints([
-
-new THREE.Vector3(0,5,0),
-
-new THREE.Vector3(0,4,0)
-
-]);
-
 cable=
 
 new THREE.Line(
 
-cableGeo,
+new THREE.BufferGeometry(),
 
 new THREE.LineBasicMaterial({
 
@@ -314,23 +338,33 @@ cable
 
 
 
+function makeGeometry(shape){
+
+if(shape==="box")
+
+return new THREE.BoxGeometry(.6,.6,.6);
+
+if(shape==="sphere")
+
+return new THREE.SphereGeometry(.35);
+
+if(shape==="cone")
+
+return new THREE.ConeGeometry(.35,.7);
+
+if(shape==="cylinder")
+
+return new THREE.CylinderGeometry(.2,.2,.7);
+
+return new THREE.OctahedronGeometry(.4);
+
+}
+
+
+
 function spawnPrizes(){
 
 prizes=[];
-
-const colors=[
-
-0xff5555,
-
-0xffff00,
-
-0x66ff66,
-
-0x66ccff,
-
-0xff66ff
-
-];
 
 
 
@@ -344,37 +378,45 @@ i++
 
 ){
 
-const prize=
+const type=
 
-new THREE.Mesh(
-
-new THREE.DodecahedronGeometry(
-
-0.35
-
-),
-
-new THREE.MeshPhongMaterial({
-
-color:
-
-colors[
+SCIENCE_TYPES[
 
 Math.floor(
 
 Math.random()
 
-*colors.length
+*
+
+SCIENCE_TYPES.length
 
 )
 
-]
+];
+
+
+
+const mesh=
+
+new THREE.Mesh(
+
+makeGeometry(
+
+type.shape
+
+),
+
+new THREE.MeshPhongMaterial({
+
+color:type.color
 
 })
 
 );
 
-prize.position.set(
+
+
+mesh.position.set(
 
 (Math.random()-0.5)*7,
 
@@ -384,14 +426,24 @@ prize.position.set(
 
 );
 
-prize.userData.caught=false;
+
+
+mesh.userData={
+
+caught:false,
+
+type:type.name
+
+};
+
+
 
 scene.add(
-prize
+mesh
 );
 
 prizes.push(
-prize
+mesh
 );
 
 }
@@ -508,13 +560,13 @@ function checkGrab(){
 
 for(
 
-const prize of prizes
+const p of prizes
 
 ){
 
 if(
 
-prize.userData.caught
+p.userData.caught
 
 ){
 
@@ -528,19 +580,17 @@ const dx=
 
 Math.abs(
 
-prize.position.x-
+p.position.x-
 
 claw.position.x
 
 );
 
-
-
 const dy=
 
 Math.abs(
 
-prize.position.y-
+p.position.y-
 
 claw.position.y
 
@@ -558,9 +608,7 @@ dy<0.7
 
 ){
 
-grabbedPrize=
-
-prize;
+grabbedPrize=p;
 
 return;
 
@@ -572,13 +620,71 @@ return;
 
 
 
-function updateClaw(){
+function spawnParticles(x,y,z){
 
-if(
+for(
 
-dropping
+let i=0;
+
+i<15;
+
+i++
 
 ){
+
+const p=
+
+new THREE.Mesh(
+
+new THREE.SphereGeometry(.05),
+
+new THREE.MeshBasicMaterial({
+
+color:0xffff00
+
+})
+
+);
+
+
+
+p.position.set(
+
+x,y,z
+
+);
+
+
+
+p.userData={
+
+vx:(Math.random()-.5)*.1,
+
+vy:Math.random()*.1,
+
+life:60
+
+};
+
+
+
+scene.add(
+p
+);
+
+particles.push(
+p
+);
+
+}
+
+}
+
+
+
+function updateClaw(){
+
+if(dropping){
 
 clawY-=0.08;
 
@@ -586,11 +692,7 @@ claw.position.y=clawY;
 
 checkGrab();
 
-if(
-
-clawY<=-0.5
-
-){
+if(clawY<=-0.5){
 
 dropping=false;
 
@@ -602,11 +704,7 @@ rising=true;
 
 
 
-if(
-
-rising
-
-){
+if(rising){
 
 clawY+=0.08;
 
@@ -614,29 +712,17 @@ claw.position.y=clawY;
 
 
 
-if(
+if(grabbedPrize){
 
-grabbedPrize
+grabbedPrize.position.x=claw.position.x;
 
-){
-
-grabbedPrize.position.x=
-
-claw.position.x;
-
-grabbedPrize.position.y=
-
-claw.position.y-0.6;
+grabbedPrize.position.y=claw.position.y-.6;
 
 }
 
 
 
-if(
-
-clawY>=4
-
-){
+if(clawY>=4){
 
 clawY=4;
 
@@ -644,11 +730,7 @@ rising=false;
 
 
 
-if(
-
-grabbedPrize
-
-){
+if(grabbedPrize){
 
 grabbedPrize.userData.caught=true;
 
@@ -656,9 +738,23 @@ player.prizes++;
 
 player.collection ??= {};
 
-player.collection["Science Item"] ??=0;
+player.collection[
+grabbedPrize.userData.type
+] ??=0;
 
-player.collection["Science Item"]++;
+player.collection[
+grabbedPrize.userData.type
+]++;
+
+spawnParticles(
+
+grabbedPrize.position.x,
+
+grabbedPrize.position.y,
+
+grabbedPrize.position.z
+
+);
 
 evaluateAchievements?.();
 
@@ -704,6 +800,44 @@ claw.position.y,
 
 
 
+function updateParticles(){
+
+particles=
+
+particles.filter(
+
+p=>{
+
+p.position.x+=p.userData.vx;
+
+p.position.y+=p.userData.vy;
+
+p.userData.life--;
+
+if(
+
+p.userData.life<=0
+
+){
+
+scene.remove(
+p
+);
+
+return false;
+
+}
+
+return true;
+
+}
+
+);
+
+}
+
+
+
 function animate(){
 
 requestAnimationFrame(
@@ -714,8 +848,14 @@ animate
 
 updateClaw();
 
+updateParticles();
+
 renderer.render(
 
-scene,camera);
+scene,
+
+camera
+
+);
 
 }
