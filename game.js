@@ -6,6 +6,8 @@ let renderer;
 
 let claw;
 
+let cable;
+
 let prizes=[];
 
 let clawX=0;
@@ -39,7 +41,7 @@ new THREE.Scene();
 scene.background=
 
 new THREE.Color(
-0x111111
+0x0f1720
 );
 
 
@@ -66,7 +68,7 @@ camera.position.set(
 
 8,
 
-15
+14
 
 );
 
@@ -74,7 +76,7 @@ camera.lookAt(
 
 0,
 
-2,
+1,
 
 0
 
@@ -112,7 +114,7 @@ new THREE.AmbientLight(
 
 0xffffff,
 
-1.5
+1.8
 
 );
 
@@ -128,13 +130,13 @@ new THREE.PointLight(
 
 0xffffff,
 
-2
+3
 
 );
 
 light.position.set(
 
-5,
+4,
 
 10,
 
@@ -176,7 +178,7 @@ animate();
 
 function buildMachine(){
 
-const machine=
+const glass=
 
 new THREE.Mesh(
 
@@ -192,18 +194,50 @@ new THREE.BoxGeometry(
 
 new THREE.MeshPhongMaterial({
 
-wireframe:true,
+color:0x66ccff,
 
-color:0xffffff
+transparent:true,
+
+opacity:0.18
 
 })
 
 );
 
-machine.position.y=2;
+glass.position.y=2;
 
 scene.add(
-machine
+glass
+);
+
+
+
+const floor=
+
+new THREE.Mesh(
+
+new THREE.BoxGeometry(
+
+10,
+
+0.2,
+
+8
+
+),
+
+new THREE.MeshPhongMaterial({
+
+color:0x333333
+
+})
+
+);
+
+floor.position.y=-1;
+
+scene.add(
+floor
 );
 
 
@@ -214,11 +248,11 @@ new THREE.Mesh(
 
 new THREE.BoxGeometry(
 
-1,
+0.8,
 
-0.4,
+0.5,
 
-1
+0.8
 
 ),
 
@@ -244,6 +278,38 @@ scene.add(
 claw
 );
 
+
+
+const cableGeo=
+
+new THREE.BufferGeometry();
+
+cableGeo.setFromPoints([
+
+new THREE.Vector3(0,5,0),
+
+new THREE.Vector3(0,4,0)
+
+]);
+
+cable=
+
+new THREE.Line(
+
+cableGeo,
+
+new THREE.LineBasicMaterial({
+
+color:0xffffff
+
+})
+
+);
+
+scene.add(
+cable
+);
+
 }
 
 
@@ -251,6 +317,22 @@ claw
 function spawnPrizes(){
 
 prizes=[];
+
+const colors=[
+
+0xff5555,
+
+0xffff00,
+
+0x66ff66,
+
+0x66ccff,
+
+0xff66ff
+
+];
+
+
 
 for(
 
@@ -266,13 +348,9 @@ const prize=
 
 new THREE.Mesh(
 
-new THREE.SphereGeometry(
+new THREE.DodecahedronGeometry(
 
-0.3,
-
-16,
-
-16
+0.35
 
 ),
 
@@ -280,9 +358,17 @@ new THREE.MeshPhongMaterial({
 
 color:
 
+colors[
+
+Math.floor(
+
 Math.random()
 
-*0xffffff
+*colors.length
+
+)
+
+]
 
 })
 
@@ -297,6 +383,8 @@ prize.position.set(
 (Math.random()-0.5)*5
 
 );
+
+prize.userData.caught=false;
 
 scene.add(
 prize
@@ -334,7 +422,7 @@ e.key==="ArrowLeft"
 
 ){
 
-clawX -=0.5;
+clawX-=0.5;
 
 }
 
@@ -346,7 +434,7 @@ e.key==="ArrowRight"
 
 ){
 
-clawX +=0.5;
+clawX+=0.5;
 
 }
 
@@ -367,6 +455,8 @@ clawX
 )
 
 );
+
+
 
 claw.position.x=
 
@@ -395,12 +485,6 @@ if(
 player.credits<=0
 
 ){
-
-setMessage?.(
-
-"NO CREDITS"
-
-);
 
 return;
 
@@ -444,7 +528,7 @@ const dx=
 
 Math.abs(
 
-prize.position.x -
+prize.position.x-
 
 claw.position.x
 
@@ -456,7 +540,7 @@ const dy=
 
 Math.abs(
 
-prize.position.y -
+prize.position.y-
 
 claw.position.y
 
@@ -466,11 +550,11 @@ claw.position.y
 
 if(
 
-dx<0.6
+dx<0.7
 
 &&
 
-dy<0.6
+dy<0.7
 
 ){
 
@@ -496,17 +580,11 @@ dropping
 
 ){
 
-clawY -=0.08;
+clawY-=0.08;
 
-claw.position.y=
-
-clawY;
-
-
+claw.position.y=clawY;
 
 checkGrab();
-
-
 
 if(
 
@@ -530,11 +608,9 @@ rising
 
 ){
 
-clawY +=0.08;
+clawY+=0.08;
 
-claw.position.y=
-
-clawY;
+claw.position.y=clawY;
 
 
 
@@ -550,7 +626,7 @@ claw.position.x;
 
 grabbedPrize.position.y=
 
-claw.position.y-0.7;
+claw.position.y-0.6;
 
 }
 
@@ -598,6 +674,32 @@ grabbedPrize=null;
 
 }
 
+
+
+cable.geometry.setFromPoints([
+
+new THREE.Vector3(
+
+claw.position.x,
+
+5,
+
+0
+
+),
+
+new THREE.Vector3(
+
+claw.position.x,
+
+claw.position.y,
+
+0
+
+)
+
+]);
+
 }
 
 
@@ -614,10 +716,6 @@ updateClaw();
 
 renderer.render(
 
-scene,
-
-camera
-
-);
+scene,camera);
 
 }
