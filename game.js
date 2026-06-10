@@ -87,8 +87,8 @@ window.innerWidth/window.innerHeight,
 
 topCamera.position.set(
 0,
-10,
-0
+7,
+0.01
 );
 
 topCamera.lookAt(
