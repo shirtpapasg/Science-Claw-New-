@@ -87,7 +87,7 @@ window.innerWidth/window.innerHeight,
 
 topCamera.position.set(
 0,
-7,
+8,
 0.01
 );
 
@@ -106,7 +106,7 @@ window.innerWidth/window.innerHeight,
 );
 
 sideCamera.position.set(
-10,
+6,
 2,
 0
 );
