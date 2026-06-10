@@ -243,6 +243,46 @@ acc.innerText=
 
 accuracy + "%";
 
+const collection =
+
+player.collection || {};
+
+const book =
+
+document.getElementById(
+"collection-book"
+);
+
+if(book){
+
+book.innerHTML =
+
+"🔋 Battery x" +
+(collection.Battery || 0)
+
++ "<br>" +
+
+"⚛️ Atom x" +
+(collection.Atom || 0)
+
+* "<br>" +
+
+"🌱 Plant x" +
+(collection.Plant || 0)
+
+* "<br>" +
+
+"🧲 Magnet x" +
+(collection.Magnet || 0)
+
+* "<br>" +
+
+"💎 Crystal x" +
+(collection.Crystal || 0);
+
+}
+
+
 }
 
 
