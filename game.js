@@ -172,50 +172,16 @@ animate();
 function buildMachine(){
 
 const glass=
+claw = new THREE.Group();
+
+const clawBody =
+
 new THREE.Mesh(
 
 new THREE.BoxGeometry(
-10,
-6,
-8
-),
-
-new THREE.MeshPhongMaterial({
-transparent:true,
-opacity:0.15,
-color:0x88ccff
-})
-
-);
-
-glass.position.y=2;
-scene.add(glass);
-
-const floor=
-new THREE.Mesh(
-
-new THREE.BoxGeometry(
-10,
-0.3,
-8
-),
-
-new THREE.MeshPhongMaterial({
-color:0x111111
-})
-
-);
-
-floor.position.y=-1;
-scene.add(floor);
-
-claw=
-new THREE.Mesh(
-
-new THREE.BoxGeometry(
-0.8,
-0.5,
-0.8
+0.6,
+0.4,
+0.6
 ),
 
 new THREE.MeshPhongMaterial({
@@ -223,6 +189,94 @@ color:0xffffff
 })
 
 );
+
+claw.add(clawBody);
+
+
+
+const finger1 =
+
+new THREE.Mesh(
+
+new THREE.BoxGeometry(
+0.12,
+0.7,
+0.12
+),
+
+new THREE.MeshPhongMaterial({
+color:0xdddddd
+})
+
+);
+
+finger1.position.set(
+0.3,
+-0.45,
+0
+);
+
+finger1.rotation.z = 0.4;
+
+claw.add(finger1);
+
+
+
+const finger2 =
+
+new THREE.Mesh(
+
+new THREE.BoxGeometry(
+0.12,
+0.7,
+0.12
+),
+
+new THREE.MeshPhongMaterial({
+color:0xdddddd
+})
+
+);
+
+finger2.position.set(
+-0.3,
+-0.45,
+0
+);
+
+finger2.rotation.z = -0.4;
+
+claw.add(finger2);
+
+
+
+const finger3 =
+
+new THREE.Mesh(
+
+new THREE.BoxGeometry(
+0.12,
+0.7,
+0.12
+),
+
+new THREE.MeshPhongMaterial({
+color:0xdddddd
+})
+
+);
+
+finger3.position.set(
+0,
+-0.45,
+0.3
+);
+
+finger3.rotation.x = 0.4;
+
+claw.add(finger3);
+
+
 
 claw.position.set(
 0,
