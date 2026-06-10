@@ -215,10 +215,16 @@ scene.add(
 glass
 );
 
+const floorMaterial =
+new THREE.MeshStandardMaterial({
 
+color:0x222222
+
+});
 
 const floor=
 
+  
 new THREE.Mesh(
 
 new THREE.BoxGeometry(
