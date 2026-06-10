@@ -215,12 +215,6 @@ scene.add(
 glass
 );
 
-const floorMaterial =
-new THREE.MeshStandardMaterial({
-
-color:0x222222
-
-});
 
 const floor=
 
@@ -761,7 +755,6 @@ const items=[
 "Crystal"
 
 ];
-
 
 
 let found=0;
