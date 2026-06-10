@@ -819,6 +819,12 @@ frontCamera.lookAt(
 
 if(activeCamera===topCamera){
 
+topCamera.position.set(
+0,
+18,
+0.01
+);
+
 topCamera.lookAt(
 0,
 0,
