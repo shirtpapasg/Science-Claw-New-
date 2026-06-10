@@ -202,30 +202,7 @@ animate();
 }
 
 function buildMachine(){
-function getRandomPrizeType(){
 
-const roll =
-Math.random()*100;
-
-if(roll < 40){
-return SCIENCE_TYPES[0];
-}
-
-if(roll < 70){
-return SCIENCE_TYPES[1];
-}
-
-if(roll < 85){
-return SCIENCE_TYPES[2];
-}
-
-if(roll < 95){
-return SCIENCE_TYPES[3];
-}
-
-return SCIENCE_TYPES[4];
-
-}
 const glass =
 
 new THREE.Mesh(
@@ -536,7 +513,30 @@ color:0xffffff
 scene.add(cable);
 
 }
+function getRandomPrizeType(){
 
+const roll =
+Math.random()*100;
+
+if(roll < 40){
+return SCIENCE_TYPES[0];
+}
+
+if(roll < 70){
+return SCIENCE_TYPES[1];
+}
+
+if(roll < 85){
+return SCIENCE_TYPES[2];
+}
+
+if(roll < 95){
+return SCIENCE_TYPES[3];
+}
+
+return SCIENCE_TYPES[4];
+
+}
 
 
 function makeGeometry(shape){
