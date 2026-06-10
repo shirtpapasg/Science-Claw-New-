@@ -669,8 +669,8 @@ function dropClaw(){
 
 if(player.credits<=0){
 
-failSound.currentTime=0;
-failSound.play();
+missSound.currentTime=0;
+missSound.play();
 
 return;
 }
