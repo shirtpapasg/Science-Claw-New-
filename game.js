@@ -363,9 +363,6 @@ prizes.push(mesh);
 }
 
 
-animate();
-
-}
 
 
 
