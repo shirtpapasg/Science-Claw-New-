@@ -25,7 +25,6 @@ let rising=false;
 let grabbedPrize=null;
 
 let shakeFrames=0;
-const GRAB_CHANCE = 0.70;
 
 const pickupSound =
 new Audio(
@@ -36,8 +35,6 @@ const missSound =
 new Audio(
 "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
 );
-
-const SCIENCE_TYPES=[
 
 const SCIENCE_TYPES=[
 
@@ -960,8 +957,15 @@ found++;
 }
 
 }
+if(
+found===items.length &&
+!player.achievements?.scientistMaster
+){
 
-if(found===items.length){
+player.achievements =
+player.achievements || {};
+
+player.achievements.scientistMaster = true;
 
 player.credits += 50;
 
@@ -972,6 +976,7 @@ saveLocal();
 alert(
 "🏆 Scientist Collection Completed!\nMr Soh is IMPRESSED!\n+50 Credits Bonus"
 );
+
 }
 
 }
