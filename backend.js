@@ -75,6 +75,7 @@ document.getElementById(
 
 if(guide){
 guide.style.display="none";
+guide.remove();
 }
 
 updateHUD();
