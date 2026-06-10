@@ -963,10 +963,15 @@ found++;
 
 if(found===items.length){
 
-alert(
-"🏆 Scientist Collection Completed!"
-);
+player.credits += 50;
 
+updateHUD();
+
+saveLocal();
+
+alert(
+"🏆 Scientist Collection Completed!\nMr Soh is IMPRESSED!\n+50 Credits Bonus"
+);
 }
 
 }
