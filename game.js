@@ -25,6 +25,7 @@ let rising=false;
 let grabbedPrize=null;
 
 let shakeFrames=0;
+const GRAB_CHANCE = 0.70;
 
 const pickupSound =
 new Audio(
@@ -668,8 +669,17 @@ dx<0.7 &&
 dz<0.7 &&
 dy<0.7
 ){
-grabbedPrize=p;
+
+if(
+Math.random() < GRAB_CHANCE
+){
+
+grabbedPrize = p;
+
+}
+
 return;
+
 }
 
 }
