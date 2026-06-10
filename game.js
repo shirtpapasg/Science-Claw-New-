@@ -106,8 +106,8 @@ window.innerWidth/window.innerHeight,
 );
 
 sideCamera.position.set(
-9,
-5,
+20,
+2,
 0
 );
 
@@ -298,9 +298,9 @@ new THREE.BoxGeometry(
 ),
 
 new THREE.MeshPhongMaterial({
-color:0x00ccff,
-emissive:0x0066ff,
-emissiveIntensity:1
+color:0x224488,
+transparent:true,
+opacity:0.25
 })
 );
 
@@ -323,7 +323,9 @@ new THREE.BoxGeometry(
 ),
 
 new THREE.MeshPhongMaterial({
-color:0x224488
+color:0x224488,
+transparent:true,
+opacity:0.25
 })
 
 );
@@ -821,8 +823,8 @@ if(activeCamera===topCamera){
 
 topCamera.position.set(
 0,
-18,
-0.01
+25,
+0
 );
 
 topCamera.lookAt(
