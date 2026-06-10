@@ -137,7 +137,7 @@ renderer.domElement
 scene.add(
 new THREE.AmbientLight(
 0xffffff,
-1.8
+2.4
 )
 );
 
@@ -187,7 +187,7 @@ new THREE.BoxGeometry(
 
 new THREE.MeshPhongMaterial({
 transparent:true,
-opacity:0.15,
+opacity:0.25,
 color:0x88ccff
 })
 
@@ -272,7 +272,21 @@ topSign.position.set(
 );
 
 scene.add(topSign);
+const neonLight =
 
+new THREE.PointLight(
+0x00ffff,
+5,
+20
+);
+
+neonLight.position.set(
+0,
+5,
+2
+);
+
+scene.add(neonLight);
 const leftWall =
 
 new THREE.Mesh(
@@ -284,9 +298,10 @@ new THREE.BoxGeometry(
 ),
 
 new THREE.MeshPhongMaterial({
-color:0x224488
+color:0x00ccff,
+emissive:0x0066ff,
+emissiveIntensity:1
 })
-
 );
 
 leftWall.position.set(
@@ -332,9 +347,10 @@ new THREE.BoxGeometry(
 ),
 
 new THREE.MeshPhongMaterial({
-color:0xffcc00
+color:0xffcc00,
+emissive:0xaa7700,
+emissiveIntensity:0.8
 })
-
 );
 
 prizeChute.position.set(
