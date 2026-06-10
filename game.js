@@ -106,7 +106,7 @@ window.innerWidth/window.innerHeight,
 );
 
 sideCamera.position.set(
-6,
+9,
 2,
 0
 );
