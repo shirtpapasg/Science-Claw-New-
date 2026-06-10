@@ -879,9 +879,8 @@ claw.position.z
 
 )
 
-)
+]);
 
-];
 
 }
 
