@@ -175,7 +175,176 @@ animate();
 
 function buildMachine(){
 
-const glass=
+const glass =
+
+new THREE.Mesh(
+
+new THREE.BoxGeometry(
+10,
+6,
+8
+),
+
+new THREE.MeshPhongMaterial({
+transparent:true,
+opacity:0.15,
+color:0x88ccff
+})
+
+);
+
+glass.position.set(
+0,
+2,
+0
+);
+
+scene.add(glass);
+
+const floor =
+
+new THREE.Mesh(
+
+new THREE.BoxGeometry(
+10,
+0.3,
+8
+),
+
+new THREE.MeshPhongMaterial({
+color:0x111111
+})
+
+);
+
+floor.position.set(
+0,
+-1,
+0
+);
+
+scene.add(floor);
+
+const cabinetBase =
+
+new THREE.Mesh(
+
+new THREE.BoxGeometry(
+12,
+2,
+10
+),
+
+new THREE.MeshPhongMaterial({
+color:0x204060
+})
+
+);
+
+cabinetBase.position.set(
+0,
+-2,
+0
+);
+
+scene.add(cabinetBase);
+
+const topSign =
+
+new THREE.Mesh(
+
+new THREE.BoxGeometry(
+12,
+1,
+2
+),
+
+new THREE.MeshPhongMaterial({
+color:0x0066ff
+})
+
+);
+
+topSign.position.set(
+0,
+5.5,
+0
+);
+
+scene.add(topSign);
+
+const leftWall =
+
+new THREE.Mesh(
+
+new THREE.BoxGeometry(
+0.5,
+6,
+8
+),
+
+new THREE.MeshPhongMaterial({
+color:0x224488
+})
+
+);
+
+leftWall.position.set(
+-5.25,
+2,
+0
+);
+
+scene.add(leftWall);
+
+const rightWall =
+
+new THREE.Mesh(
+
+new THREE.BoxGeometry(
+0.5,
+6,
+8
+),
+
+new THREE.MeshPhongMaterial({
+color:0x224488
+})
+
+);
+
+rightWall.position.set(
+5.25,
+2,
+0
+);
+
+scene.add(rightWall);
+
+const prizeChute =
+
+new THREE.Mesh(
+
+new THREE.BoxGeometry(
+3,
+1,
+1.5
+),
+
+new THREE.MeshPhongMaterial({
+color:0xffcc00
+})
+
+);
+
+prizeChute.position.set(
+0,
+-1.2,
+4.2
+);
+
+scene.add(prizeChute);
+
 claw = new THREE.Group();
 
 const clawBody =
@@ -195,8 +364,6 @@ color:0xffffff
 );
 
 claw.add(clawBody);
-
-
 
 finger1 =
 
@@ -224,8 +391,6 @@ finger1.rotation.z = 0.4;
 
 claw.add(finger1);
 
-
-
 finger2 =
 
 new THREE.Mesh(
@@ -251,8 +416,6 @@ finger2.position.set(
 finger2.rotation.z = -0.4;
 
 claw.add(finger2);
-
-
 
 finger3 =
 
@@ -280,8 +443,6 @@ finger3.rotation.x = 0.4;
 
 claw.add(finger3);
 
-
-
 claw.position.set(
 0,
 4,
@@ -290,7 +451,8 @@ claw.position.set(
 
 scene.add(claw);
 
-cable=
+cable =
+
 new THREE.Line(
 
 new THREE.BufferGeometry(),
@@ -304,6 +466,7 @@ color:0xffffff
 scene.add(cable);
 
 }
+
 
 function makeGeometry(shape){
 
