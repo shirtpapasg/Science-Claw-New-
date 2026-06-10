@@ -271,7 +271,7 @@ topSign.position.set(
 0
 );
 
-scene.add(topSign);
+//scene.add(topSign);
 const neonLight =
 
 new THREE.PointLight(
