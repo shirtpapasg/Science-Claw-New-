@@ -603,27 +603,33 @@ return;
 
 }
 
-if(
+const speed = 0.4;
 
-e.key==="ArrowLeft"
+if(e.key==="ArrowLeft"){
 
-){
-
-clawX-=0.5;
+clawX -= speed;
 
 }
 
-if(
+if(e.key==="ArrowRight"){
 
-e.key==="ArrowRight"
-
-){
-
-clawX+=0.5;
+clawX += speed;
 
 }
 
-clawX=
+if(e.key==="ArrowUp"){
+
+clawZ -= speed;
+
+}
+
+if(e.key==="ArrowDown"){
+
+clawZ += speed;
+
+}
+
+clawX =
 
 Math.max(
 
@@ -639,9 +645,24 @@ clawX
 
 );
 
-claw.position.x=
+clawZ =
 
-clawX;
+Math.max(
+
+-3,
+
+Math.min(
+
+3,
+
+clawZ
+
+)
+
+);
+
+claw.position.x = clawX;
+claw.position.z = clawZ;
 
 if(
 
@@ -659,7 +680,6 @@ dropClaw();
 
 }
 
-
 function dropClaw(){
 
 if(
@@ -668,15 +688,9 @@ player.credits<=0
 
 ){
 
-failSound.currentTime=0;
-
-failSound.play();
-
 return;
 
 }
-
-
 
 player.credits--;
 
@@ -687,8 +701,6 @@ saveLocal();
 dropping=true;
 
 }
-
-
 
 function checkGrab(){
 
@@ -702,9 +714,11 @@ if(
 
 p.userData.caught
 
-) continue;
+){
 
+continue;
 
+}
 
 const dx=
 
@@ -716,7 +730,15 @@ claw.position.x
 
 );
 
+const dz=
 
+Math.abs(
+
+p.position.z-
+
+claw.position.z
+
+);
 
 const dy=
 
@@ -728,11 +750,13 @@ claw.position.y
 
 );
 
-
-
 if(
 
 dx<0.7
+
+&&
+
+dz<0.7
 
 &&
 
@@ -750,15 +774,13 @@ return;
 
 }
 
-
-
 function updateClaw(){
 
 if(dropping){
 
-clawY-=0.08;
+clawY -= 0.08;
 
-claw.position.y=clawY;
+claw.position.y = clawY;
 
 checkGrab();
 
@@ -772,29 +794,18 @@ rising=true;
 
 }
 
-
-
 if(rising){
 
-clawY+=0.08;
+clawY += 0.08;
 
-claw.position.y=clawY;
-
-
+claw.position.y = clawY;
 
 if(grabbedPrize){
 
-grabbedPrize.position.x=
-
-claw.position.x;
-
-grabbedPrize.position.y=
-
-claw.position.y-.6;
-
+grabbedPrize.position.x = claw.position.x;
+grabbedPrize.position.y = claw.position.y - 0.6;
+grabbedPrize.position.z = claw.position.z;
 }
-
-
 
 if(clawY>=4){
 
@@ -802,17 +813,31 @@ clawY=4;
 
 rising=false;
 
-
-
 if(grabbedPrize){
 
-pickupSound.currentTime=0;
-
-pickupSound.play();
-
-shakeFrames=25;
-
 player.prizes++;
+
+if(!player.collection){
+
+player.collection={};
+
+}
+
+const item=
+
+grabbedPrize.userData.type;
+
+if(
+
+!player.collection[item]
+
+){
+
+player.collection[item]=0;
+
+}
+
+player.collection[item]++;
 
 updateHUD();
 
@@ -824,13 +849,13 @@ grabbedPrize.visible=false;
 
 grabbedPrize=null;
 
-}
+checkCollectionAchievement();
 
 }
 
 }
 
-
+}
 
 cable.geometry.setFromPoints([
 
@@ -840,7 +865,7 @@ claw.position.x,
 
 5,
 
-0
+claw.position.z
 
 ),
 
@@ -850,19 +875,53 @@ claw.position.x,
 
 claw.position.y,
 
-0
+claw.position.z
 
 )
 
-]);
+)
+
+];
 
 }
 
+function setCameraView(view){
 
+if(view==="front"){
+
+activeCamera=
+
+frontCamera;
+
+}
+
+if(view==="top"){
+
+activeCamera=
+
+topCamera;
+
+}
+
+if(view==="side"){
+
+activeCamera=
+
+sideCamera;
+
+}
+
+}
 
 function updateCamera(){
 
-camera.position.x =
+if(
+
+activeCamera===frontCamera
+
+){
+
+frontCamera.position.x=
 
 Math.sin(
 
@@ -870,29 +929,7 @@ Date.now()*0.001
 
 )*0.6;
 
-
-
-if(
-
-shakeFrames>0
-
-){
-
-camera.position.x +=
-
-(Math.random()-0.5)*0.8;
-
-camera.position.y +=
-
-(Math.random()-0.5)*0.5;
-
-shakeFrames--;
-
-}
-
-
-
-camera.lookAt(
+frontCamera.lookAt(
 
 0,
 
@@ -904,7 +941,43 @@ camera.lookAt(
 
 }
 
+if(
 
+activeCamera===topCamera
+
+){
+
+topCamera.lookAt(
+
+0,
+
+0,
+
+0
+
+);
+
+}
+
+if(
+
+activeCamera===sideCamera
+
+){
+
+sideCamera.lookAt(
+
+0,
+
+1,
+
+0
+
+);
+
+}
+
+}
 
 function animate(){
 
@@ -922,7 +995,7 @@ renderer.render(
 
 scene,
 
-camera
+activeCamera
 
 );
 
@@ -933,21 +1006,14 @@ function checkCollectionAchievement(){
 const items=[
 
 "Battery",
-
 "Atom",
-
 "Plant",
-
 "Magnet",
-
 "Crystal"
 
 ];
 
-
 let found=0;
-
-
 
 for(
 
@@ -967,8 +1033,6 @@ found++;
 
 }
 
-
-
 if(
 
 found===items.length
@@ -984,3 +1048,4 @@ alert(
 }
 
 }
+
