@@ -1,217 +1,109 @@
 <!DOCTYPE html>
 
 <html>
-
 <head>
-  
+
 <link rel="icon" type="image/png" href="favicon.png">
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1">
-
-<title>
-
-Science Claw New
-
-</title>
+<title>Science Claw New</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <style>
 
 body{
-
 margin:0;
-
 background:#050505;
-
 color:white;
-
 font-family:Arial;
-
 overflow:hidden;
-
 }
-
-
 
 #registration-screen{
-
 position:absolute;
-
 top:30px;
-
 left:30px;
-
 z-index:20;
-
 }
-
-
 
 #registration-screen input,
-
 #registration-screen select{
-
 padding:10px;
-
 font-size:20px;
-
 margin-top:10px;
-
 width:240px;
-
 }
-
-
 
 #registration-screen button{
-
 padding:15px;
-
 font-size:22px;
-
 margin-top:20px;
-
 cursor:pointer;
-
 }
-
-
 
 #canvas-container{
-
 position:fixed;
-
 top:0;
-
 left:0;
-
 width:100vw;
-
 height:100vh;
-
 z-index:1;
-
 }
-
-
 
 #ui-layer{
-
 position:absolute;
-
 left:20px;
-
 bottom:20px;
-
 z-index:15;
-
 }
-
-
 
 .hud{
-
-background:rgba(
-
-0,
-0,
-0,
-0.8
-
-);
-
+background:rgba(0,0,0,0.85);
 padding:20px;
-
 border-radius:20px;
-
-width:280px;
-
+width:300px;
 }
-
-
 
 .hud p{
-
 font-size:18px;
-
+margin:6px 0;
 }
-
-
 
 .hud button{
-
 width:100%;
-
 padding:12px;
-
-margin-top:10px;
-
-font-size:18px;
-
+margin-top:8px;
+font-size:16px;
 cursor:pointer;
-
 }
-
-
 
 .modal{
-
 display:none;
-
 position:fixed;
-
 top:50%;
-
 left:50%;
-
-transform:translate(
-
--50%,
-
--50%
-
-);
-
+transform:translate(-50%,-50%);
 background:#111;
-
 padding:30px;
-
 border-radius:20px;
-
 z-index:100;
-
 width:350px;
-
 }
-
-
 
 .modal button{
-
 width:100%;
-
 padding:12px;
-
 margin-top:10px;
-
 font-size:18px;
-
 }
 
-
-
 #answer-area button{
-
 width:100%;
-
 margin-top:10px;
-
 padding:12px;
-
 }
 
 </style>
@@ -222,231 +114,131 @@ padding:12px;
 
 <div id="registration-screen">
 
-<h1>
-
-SCIENCE CLAW NEW
-
-</h1>
+<h1>SCIENCE CLAW NEW</h1>
 
 <input
-
 id="student-name"
-
-placeholder="Student Name"
-
->
+placeholder="Student Name">
 
 <br>
 
 <select id="student-class">
 
-<option value="P3">
-
-Primary 3
-
-</option>
-
-<option value="P4">
-
-Primary 4
-
-</option>
-
-<option value="P5">
-
-Primary 5
-
-</option>
-
-<option value="P6">
-
-Primary 6
-
-</option>
+<option value="P3">Primary 3</option>
+<option value="P4">Primary 4</option>
+<option value="P5">Primary 5</option>
+<option value="P6">Primary 6</option>
 
 </select>
 
 <br>
 
 <button onclick="authorizeStudentLogin()">
-
 Enter Machine
-
 </button>
 
 </div>
 
-
-
-<div id="canvas-container">
-
-</div>
-
-
+<div id="canvas-container"></div>
 
 <div id="ui-layer">
 
 <div class="hud">
 
 <p>
-
 Player:
-
-<span id="player-hud-tag">
-
-Guest
-
-</span>
-
+<span id="player-hud-tag">Guest</span>
 </p>
 
 <p>
-
 Credits:
-
-<span id="credit-display">
-
-0
-
-</span>
-
+<span id="credit-display">0</span>
 </p>
 
 <p>
-
 Streak:
-
-<span id="streak-display">
-
-0
-
-</span>
-
+<span id="streak-display">0</span>
 </p>
 
 <p>
-
 Prizes:
-
-<span id="prizes-display">
-
-0
-
-</span>
-
+<span id="prizes-display">0</span>
 </p>
 
 <p>
-
 Accuracy:
-
-<span id="accuracy-display">
-
-0%
-
-</span>
-
+<span id="accuracy-display">0%</span>
 </p>
 
+<hr>
 
+<button onclick="setCameraView('front')">
+Front View
+</button>
+
+<button onclick="setCameraView('top')">
+Top View
+</button>
+
+<button onclick="setCameraView('side')">
+Side View
+</button>
+
+<hr>
 
 <button onclick="showTopUpMenu()">
-
 Earn Credits
-
 </button>
 
 <button onclick="openDashboard?.()">
-
 Dashboard
-
 </button>
 
 <button onclick="saveGameReport?.()">
-
 Save Report
-
 </button>
 
 <button onclick="resetPlayer()">
-
 Switch Player
-
 </button>
 
 </div>
 
 </div>
 
+<div id="topup-modal" class="modal">
 
-
-<div
-
-id="topup-modal"
-
-class="modal"
-
->
-
-<h2>
-
-Earn Credits
-
-</h2>
+<h2>Earn Credits</h2>
 
 <button onclick="startQuiz(1,3)">
-
 1 Question = +3 Credits
-
 </button>
 
 <button onclick="startQuiz(3,10)">
-
 3 Questions = +10 Credits
-
 </button>
 
 <button onclick="document.getElementById('topup-modal').style.display='none'">
-
 Close
-
 </button>
 
 </div>
 
-
-
-<div
-
-id="quiz-modal"
-
-class="modal"
-
->
+<div id="quiz-modal" class="modal">
 
 <h2 id="question-title">
-
 Question
-
 </h2>
 
-<p id="question-text">
+<p id="question-text"></p>
 
-</p>
-
-<div id="answer-area">
-
-</div>
+<div id="answer-area"></div>
 
 <button onclick="submitAnswer()">
-
 Submit Answer
-
 </button>
 
 </div>
-
-
 
 <script src="questions.js"></script>
 
@@ -461,5 +253,5 @@ Submit Answer
 <script src="ui.js"></script>
 
 </body>
-
 </html>
+
