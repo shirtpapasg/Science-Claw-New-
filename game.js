@@ -796,3 +796,12 @@ alert(
 }
 
 }
+
+function setCameraView(view){
+
+console.log(
+"Camera View:",
+view
+);
+
+}
