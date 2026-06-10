@@ -1,11 +1,6 @@
 let scene;
-
+let camera;
 let renderer;
-
-let frontCamera;
-let topCamera;
-let sideCamera;
-let activeCamera;
 
 let claw;
 let cable;
@@ -13,7 +8,6 @@ let cable;
 let prizes=[];
 
 let clawX=0;
-let clawZ=0;
 let clawY=4;
 
 let dropping=false;
@@ -22,6 +16,18 @@ let rising=false;
 let grabbedPrize=null;
 
 let shakeFrames=0;
+
+const pickupSound =
+new Audio(
+"https://actions.google.com/sounds/v1/cartoon/pop.ogg"
+);
+
+const failSound =
+new Audio(
+"https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"
+);
+
+
 
 const SCIENCE_TYPES=[
 
@@ -33,9 +39,11 @@ const SCIENCE_TYPES=[
 
 ];
 
+
+
 function initGame(){
 
-const container=
+const container =
 
 document.getElementById(
 "canvas-container"
@@ -43,20 +51,26 @@ document.getElementById(
 
 container.innerHTML="";
 
-scene=
-new THREE.Scene();
 
-scene.background=
+
+scene = new THREE.Scene();
+
+scene.background =
+
 new THREE.Color(
 0x101820
 );
 
-frontCamera=
+
+
+camera =
+
 new THREE.PerspectiveCamera(
 
 65,
 
 window.innerWidth/
+
 window.innerHeight,
 
 0.1,
@@ -65,68 +79,20 @@ window.innerHeight,
 
 );
 
-frontCamera.position.set(
+camera.position.set(
+
 0,
+
 7,
+
 13
-);
-
-topCamera=
-new THREE.PerspectiveCamera(
-
-65,
-
-window.innerWidth/
-window.innerHeight,
-
-0.1,
-
-1000
 
 );
 
-topCamera.position.set(
-0,
-15,
-0
-);
 
-topCamera.lookAt(
-0,
-0,
-0
-);
 
-sideCamera=
-new THREE.PerspectiveCamera(
+renderer =
 
-65,
-
-window.innerWidth/
-window.innerHeight,
-
-0.1,
-
-1000
-
-);
-
-sideCamera.position.set(
-13,
-7,
-0
-);
-
-sideCamera.lookAt(
-0,
-0,
-0
-);
-
-activeCamera=
-frontCamera;
-
-renderer=
 new THREE.WebGLRenderer({
 
 antialias:true
@@ -142,8 +108,12 @@ window.innerHeight
 );
 
 container.appendChild(
+
 renderer.domElement
+
 );
+
+
 
 scene.add(
 
@@ -157,7 +127,9 @@ new THREE.AmbientLight(
 
 );
 
-const light=
+
+
+const light =
 
 new THREE.PointLight(
 
@@ -168,201 +140,44 @@ new THREE.PointLight(
 );
 
 light.position.set(
+
 5,
+
 10,
+
 5
+
 );
 
 scene.add(
 light
 );
 
+
+
 buildMachine();
 
 spawnPrizes();
 
 document.removeEventListener(
+
 "keydown",
+
 controls
+
 );
 
 document.addEventListener(
+
 "keydown",
+
 controls
+
 );
 
 animate();
 
 }
-
-function buildMachine(){
-
-const glass=
-
-new THREE.Mesh(
-
-new THREE.BoxGeometry(
-10,
-6,
-8
-),
-
-new THREE.MeshPhongMaterial({
-
-transparent:true,
-opacity:0.15,
-color:0x88ccff
-
-})
-
-);
-
-glass.position.y=2;
-
-scene.add(glass);
-
-const floor=
-
-new THREE.Mesh(
-
-new THREE.BoxGeometry(
-10,
-0.3,
-8
-),
-
-new THREE.MeshPhongMaterial({
-
-color:0x111111
-
-})
-
-);
-
-floor.position.y=-1;
-
-scene.add(floor);
-
-claw=
-
-new THREE.Mesh(
-
-new THREE.BoxGeometry(
-0.8,
-0.5,
-0.8
-),
-
-new THREE.MeshPhongMaterial({
-
-color:0xffffff
-
-})
-
-);
-
-claw.position.set(
-0,
-4,
-0
-);
-
-scene.add(claw);
-
-cable=
-
-new THREE.Line(
-
-new THREE.BufferGeometry(),
-
-new THREE.LineBasicMaterial({
-
-color:0xffffff
-
-})
-
-);
-
-scene.add(cable);
-
-}
-
-function makeGeometry(shape){
-
-if(shape==="box")
-return new THREE.BoxGeometry(.6,.6,.6);
-
-if(shape==="sphere")
-return new THREE.SphereGeometry(.35);
-
-if(shape==="cone")
-return new THREE.ConeGeometry(.35,.7);
-
-if(shape==="cylinder")
-return new THREE.CylinderGeometry(.2,.2,.7);
-
-return new THREE.OctahedronGeometry(.4);
-
-}
-
-function spawnPrizes(){
-
-prizes=[];
-
-for(let i=0;i<15;i++){
-
-const type=
-
-SCIENCE_TYPES[
-Math.floor(
-Math.random()*
-SCIENCE_TYPES.length
-)
-];
-
-const mesh=
-
-new THREE.Mesh(
-
-makeGeometry(
-type.shape
-),
-
-new THREE.MeshPhongMaterial({
-
-color:type.color
-
-})
-
-);
-
-mesh.position.set(
-
-(Math.random()-0.5)*7,
-
--0.5,
-
-(Math.random()-0.5)*5
-
-);
-
-mesh.userData={
-
-caught:false,
-
-type:type.name
-
-};
-
-scene.add(mesh);
-
-prizes.push(mesh);
-
-}
-
-}
-
-
 
 
 
@@ -600,33 +415,27 @@ return;
 
 }
 
-const speed = 0.4;
+if(
 
-if(e.key==="ArrowLeft"){
+e.key==="ArrowLeft"
 
-clawX -= speed;
+){
 
-}
-
-if(e.key==="ArrowRight"){
-
-clawX += speed;
+clawX-=0.5;
 
 }
 
-if(e.key==="ArrowUp"){
+if(
 
-clawZ -= speed;
+e.key==="ArrowRight"
 
-}
+){
 
-if(e.key==="ArrowDown"){
-
-clawZ += speed;
+clawX+=0.5;
 
 }
 
-clawX =
+clawX=
 
 Math.max(
 
@@ -642,24 +451,9 @@ clawX
 
 );
 
-clawZ =
+claw.position.x=
 
-Math.max(
-
--3,
-
-Math.min(
-
-3,
-
-clawZ
-
-)
-
-);
-
-claw.position.x = clawX;
-claw.position.z = clawZ;
+clawX;
 
 if(
 
@@ -677,6 +471,7 @@ dropClaw();
 
 }
 
+
 function dropClaw(){
 
 if(
@@ -685,9 +480,15 @@ player.credits<=0
 
 ){
 
+failSound.currentTime=0;
+
+failSound.play();
+
 return;
 
 }
+
+
 
 player.credits--;
 
@@ -698,6 +499,8 @@ saveLocal();
 dropping=true;
 
 }
+
+
 
 function checkGrab(){
 
@@ -711,11 +514,9 @@ if(
 
 p.userData.caught
 
-){
+) continue;
 
-continue;
 
-}
 
 const dx=
 
@@ -727,15 +528,7 @@ claw.position.x
 
 );
 
-const dz=
 
-Math.abs(
-
-p.position.z-
-
-claw.position.z
-
-);
 
 const dy=
 
@@ -747,13 +540,11 @@ claw.position.y
 
 );
 
+
+
 if(
 
 dx<0.7
-
-&&
-
-dz<0.7
 
 &&
 
@@ -771,13 +562,15 @@ return;
 
 }
 
+
+
 function updateClaw(){
 
 if(dropping){
 
-clawY -= 0.08;
+clawY-=0.08;
 
-claw.position.y = clawY;
+claw.position.y=clawY;
 
 checkGrab();
 
@@ -791,18 +584,29 @@ rising=true;
 
 }
 
+
+
 if(rising){
 
-clawY += 0.08;
+clawY+=0.08;
 
-claw.position.y = clawY;
+claw.position.y=clawY;
+
+
 
 if(grabbedPrize){
 
-grabbedPrize.position.x = claw.position.x;
-grabbedPrize.position.y = claw.position.y - 0.6;
-grabbedPrize.position.z = claw.position.z;
+grabbedPrize.position.x=
+
+claw.position.x;
+
+grabbedPrize.position.y=
+
+claw.position.y-.6;
+
 }
+
+
 
 if(clawY>=4){
 
@@ -810,31 +614,17 @@ clawY=4;
 
 rising=false;
 
+
+
 if(grabbedPrize){
 
+pickupSound.currentTime=0;
+
+pickupSound.play();
+
+shakeFrames=25;
+
 player.prizes++;
-
-if(!player.collection){
-
-player.collection={};
-
-}
-
-const item=
-
-grabbedPrize.userData.type;
-
-if(
-
-!player.collection[item]
-
-){
-
-player.collection[item]=0;
-
-}
-
-player.collection[item]++;
 
 updateHUD();
 
@@ -846,13 +636,13 @@ grabbedPrize.visible=false;
 
 grabbedPrize=null;
 
-checkCollectionAchievement();
-
 }
 
 }
 
 }
+
+
 
 cable.geometry.setFromPoints([
 
@@ -862,7 +652,7 @@ claw.position.x,
 
 5,
 
-claw.position.z
+0
 
 ),
 
@@ -872,52 +662,19 @@ claw.position.x,
 
 claw.position.y,
 
-claw.position.z
+0
 
 )
 
 ]);
 
-
 }
 
-function setCameraView(view){
 
-if(view==="front"){
-
-activeCamera=
-
-frontCamera;
-
-}
-
-if(view==="top"){
-
-activeCamera=
-
-topCamera;
-
-}
-
-if(view==="side"){
-
-activeCamera=
-
-sideCamera;
-
-}
-
-}
 
 function updateCamera(){
 
-if(
-
-activeCamera===frontCamera
-
-){
-
-frontCamera.position.x=
+camera.position.x =
 
 Math.sin(
 
@@ -925,7 +682,29 @@ Date.now()*0.001
 
 )*0.6;
 
-frontCamera.lookAt(
+
+
+if(
+
+shakeFrames>0
+
+){
+
+camera.position.x +=
+
+(Math.random()-0.5)*0.8;
+
+camera.position.y +=
+
+(Math.random()-0.5)*0.5;
+
+shakeFrames--;
+
+}
+
+
+
+camera.lookAt(
 
 0,
 
@@ -937,43 +716,7 @@ frontCamera.lookAt(
 
 }
 
-if(
 
-activeCamera===topCamera
-
-){
-
-topCamera.lookAt(
-
-0,
-
-0,
-
-0
-
-);
-
-}
-
-if(
-
-activeCamera===sideCamera
-
-){
-
-sideCamera.lookAt(
-
-0,
-
-1,
-
-0
-
-);
-
-}
-
-}
 
 function animate(){
 
@@ -991,7 +734,7 @@ renderer.render(
 
 scene,
 
-activeCamera
+camera
 
 );
 
@@ -1002,14 +745,21 @@ function checkCollectionAchievement(){
 const items=[
 
 "Battery",
+
 "Atom",
+
 "Plant",
+
 "Magnet",
+
 "Crystal"
 
 ];
 
+
 let found=0;
+
+
 
 for(
 
@@ -1029,6 +779,8 @@ found++;
 
 }
 
+
+
 if(
 
 found===items.length
@@ -1044,4 +796,3 @@ alert(
 }
 
 }
-
