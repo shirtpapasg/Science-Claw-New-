@@ -9,6 +9,10 @@ let activeCamera;
 let claw;
 let cable;
 
+let finger1;
+let finger2;
+let finger3;
+
 let prizes=[];
 
 let clawX=0;
@@ -194,7 +198,7 @@ claw.add(clawBody);
 
 
 
-const finger1 =
+finger1 =
 
 new THREE.Mesh(
 
@@ -222,7 +226,7 @@ claw.add(finger1);
 
 
 
-const finger2 =
+finger2 =
 
 new THREE.Mesh(
 
@@ -250,7 +254,7 @@ claw.add(finger2);
 
 
 
-const finger3 =
+finger3 =
 
 new THREE.Mesh(
 
@@ -496,6 +500,12 @@ if(dropping){
 clawY-=0.08;
 claw.position.y=clawY;
 
+finger1.rotation.z = 0.7;
+
+finger2.rotation.z = -0.7;
+
+finger3.rotation.x = 0.7;
+
 checkGrab();
 
 if(clawY<=-0.5){
@@ -512,6 +522,12 @@ if(rising){
 clawY+=0.08;
 claw.position.y=clawY;
 
+finger1.rotation.z = 0.25;
+
+finger2.rotation.z = -0.25;
+
+finger3.rotation.x = 0.25;
+  
 if(grabbedPrize){
 
 grabbedPrize.position.x=
@@ -528,6 +544,11 @@ claw.position.z;
 if(clawY>=4){
 
 clawY=4;
+ finger1.rotation.z = 0.4;
+
+finger2.rotation.z = -0.4;
+
+finger3.rotation.x = 0.4;
 rising=false;
 
 if(grabbedPrize){
