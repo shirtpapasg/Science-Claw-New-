@@ -824,7 +824,7 @@ if(activeCamera===topCamera){
 
 topCamera.position.set(
 0,
-25,
+8,
 0.01
 );
 
