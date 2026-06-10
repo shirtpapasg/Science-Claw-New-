@@ -32,21 +32,51 @@ new Audio(
 "https://actions.google.com/sounds/v1/cartoon/pop.ogg"
 );
 
-const failSound =
+const missSound =
 new Audio(
-"https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"
+"https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
 );
 
 const SCIENCE_TYPES=[
 
-{name:"Battery",color:0xffff00,shape:"box"},
-{name:"Atom",color:0x66ccff,shape:"sphere"},
-{name:"Plant",color:0x55ff55,shape:"cone"},
-{name:"Magnet",color:0xff5555,shape:"cylinder"},
-{name:"Crystal",color:0xff66ff,shape:"diamond"}
+const SCIENCE_TYPES=[
+
+{
+name:"Battery",
+color:0xffff00,
+shape:"box",
+grabChance:0.80
+},
+
+{
+name:"Atom",
+color:0x66ccff,
+shape:"sphere",
+grabChance:0.75
+},
+
+{
+name:"Plant",
+color:0x55ff55,
+shape:"cone",
+grabChance:0.70
+},
+
+{
+name:"Magnet",
+color:0xff5555,
+shape:"cylinder",
+grabChance:0.60
+},
+
+{
+name:"Crystal",
+color:0xff66ff,
+shape:"diamond",
+grabChance:0.50
+}
 
 ];
-
 function initGame(){
 
 const container=
@@ -542,9 +572,10 @@ mesh.position.set(
 
 mesh.userData={
 caught:false,
-type:type.name
+type:type.name,
+grabChance:type.grabChance
 };
-
+  
 scene.add(mesh);
 prizes.push(mesh);
 
@@ -671,7 +702,7 @@ dy<0.7
 ){
 
 if(
-Math.random() < GRAB_CHANCE
+Math.random() < p.userData.grabChance
 ){
 
 grabbedPrize = p;
@@ -743,6 +774,12 @@ finger2.rotation.z = -0.4;
 
 finger3.rotation.x = 0.4;
 rising=false;
+if(!grabbedPrize){
+
+missSound.currentTime = 0;
+missSound.play();
+
+}
 
 if(grabbedPrize){
 
