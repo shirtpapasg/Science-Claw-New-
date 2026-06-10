@@ -62,6 +62,37 @@ cursor:pointer;
 
 }
 
+#camera-bar{
+
+position:fixed;
+
+top:15px;
+
+left:50%;
+
+transform:translateX(-50%);
+
+z-index:40;
+
+display:flex;
+
+gap:10px;
+
+}
+
+#camera-bar button{
+
+padding:10px 20px;
+
+font-size:16px;
+
+border:none;
+
+border-radius:10px;
+
+cursor:pointer;
+
+}  
 #ui-layer{
 position:absolute;
 left:20px;
@@ -71,7 +102,7 @@ z-index:20;
 
 .hud{
 
-width:300px;
+width:240px;
 
 background:rgba(
 0,
@@ -221,6 +252,21 @@ Enter Machine
 </div>
 
 <div id="canvas-container"></div>
+<div id="camera-bar">
+
+<button onclick="setCameraView('front')">
+Front
+</button>
+
+<button onclick="setCameraView('top')">
+Top
+</button>
+
+<button onclick="setCameraView('side')">
+Side
+</button>
+
+</div>
 
 <div id="ui-layer">
 
@@ -252,18 +298,6 @@ Accuracy:
 </p>
 
 <hr>
-
-<button onclick="setCameraView('front')">
-Front View
-</button>
-
-<button onclick="setCameraView('top')">
-Top View
-</button>
-
-<button onclick="setCameraView('side')">
-Side View
-</button>
 
 <hr>
 
