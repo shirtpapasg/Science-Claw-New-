@@ -265,17 +265,17 @@ book.innerHTML =
 "⚛️ Atom x" +
 (collection.Atom || 0)
 
-* "<br>" +
++ "<br>" +
 
 "🌱 Plant x" +
 (collection.Plant || 0)
 
-* "<br>" +
++ "<br>" +
 
 "🧲 Magnet x" +
 (collection.Magnet || 0)
 
-* "<br>" +
++ "<br>" +
 
 "💎 Crystal x" +
 (collection.Crystal || 0);
