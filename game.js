@@ -310,7 +310,8 @@ leftWall.position.set(
 0
 );
 
-scene.add(leftWall);
+//scene.add(leftWall);
+
 
 const rightWall =
 
@@ -336,7 +337,7 @@ rightWall.position.set(
 0
 );
 
-scene.add(rightWall);
+//scene.add(rightWall);
 
 const prizeChute =
 
