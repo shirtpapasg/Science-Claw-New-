@@ -90,7 +90,8 @@ panel.id="collection-panel";
 
 panel.style.position="fixed";
 
-panel.style.top="20px";
+panel.style.bottom="20px";
+panel.style.top="auto";
 
 panel.style.right="20px";
 
