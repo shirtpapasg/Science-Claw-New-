@@ -65,20 +65,21 @@ player.credits = 3;
 
 
 document.getElementById(
-
 "registration-screen"
-
 ).style.display="none";
 
+const guide =
+document.getElementById(
+"controls-guide"
+);
 
+if(guide){
+guide.style.display="none";
+}
 
 updateHUD();
 
-
-
 initGame();
-
-
 
 saveLocal();
 
