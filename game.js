@@ -187,7 +187,38 @@ light.position.set(
 scene.add(light);
 
 buildMachine();
+function getRandomPrizeType(){
 
+const roll =
+Math.random()*100;
+
+if(roll < 40){
+
+return SCIENCE_TYPES[0];
+
+}
+
+if(roll < 70){
+
+return SCIENCE_TYPES[1];
+
+}
+
+if(roll < 85){
+
+return SCIENCE_TYPES[2];
+
+}
+
+if(roll < 95){
+
+return SCIENCE_TYPES[3];
+
+}
+
+return SCIENCE_TYPES[4];
+
+}
 spawnPrizes();
 
 document.removeEventListener(
@@ -543,13 +574,8 @@ prizes=[];
 
 for(let i=0;i<15;i++){
 
-const type=
-SCIENCE_TYPES[
-Math.floor(
-Math.random()*
-SCIENCE_TYPES.length
-)
-];
+const type =
+getRandomPrizeType();
 
 const mesh=
 new THREE.Mesh(
