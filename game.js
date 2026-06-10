@@ -1,6 +1,10 @@
 let scene;
-let camera;
 let renderer;
+
+let frontCamera;
+let topCamera;
+let sideCamera;
+let activeCamera;
 
 let claw;
 let cable;
@@ -8,6 +12,7 @@ let cable;
 let prizes=[];
 
 let clawX=0;
+let clawZ=0;
 let clawY=4;
 
 let dropping=false;
@@ -27,8 +32,6 @@ new Audio(
 "https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"
 );
 
-
-
 const SCIENCE_TYPES=[
 
 {name:"Battery",color:0xffff00,shape:"box"},
@@ -39,293 +42,228 @@ const SCIENCE_TYPES=[
 
 ];
 
-
-
 function initGame(){
 
-const container =
-
+const container=
 document.getElementById(
 "canvas-container"
 );
 
 container.innerHTML="";
 
+scene=
+new THREE.Scene();
 
-
-scene = new THREE.Scene();
-
-scene.background =
-
+scene.background=
 new THREE.Color(
-0x101820
+0x08131f
 );
 
-
-
-camera =
-
+frontCamera=
 new THREE.PerspectiveCamera(
-
 65,
-
-window.innerWidth/
-
-window.innerHeight,
-
+window.innerWidth/window.innerHeight,
 0.1,
-
 1000
-
 );
 
-camera.position.set(
-
+frontCamera.position.set(
 0,
-
 7,
-
 13
-
 );
 
+topCamera=
+new THREE.PerspectiveCamera(
+65,
+window.innerWidth/window.innerHeight,
+0.1,
+1000
+);
 
+topCamera.position.set(
+0,
+15,
+0
+);
 
-renderer =
+topCamera.lookAt(
+0,
+0,
+0
+);
 
+sideCamera=
+new THREE.PerspectiveCamera(
+65,
+window.innerWidth/window.innerHeight,
+0.1,
+1000
+);
+
+sideCamera.position.set(
+13,
+7,
+0
+);
+
+sideCamera.lookAt(
+0,
+0,
+0
+);
+
+activeCamera=
+frontCamera;
+
+renderer=
 new THREE.WebGLRenderer({
-
 antialias:true
-
 });
 
 renderer.setSize(
-
 window.innerWidth,
-
 window.innerHeight
-
 );
 
 container.appendChild(
-
 renderer.domElement
-
 );
-
-
 
 scene.add(
-
 new THREE.AmbientLight(
-
 0xffffff,
-
 1.8
-
 )
-
 );
 
-
-
-const light =
-
+const light=
 new THREE.PointLight(
-
 0xffffff,
-
 4
-
 );
 
 light.position.set(
-
 5,
-
 10,
-
 5
-
 );
 
-scene.add(
-light
-);
-
-
+scene.add(light);
 
 buildMachine();
 
 spawnPrizes();
 
 document.removeEventListener(
-
 "keydown",
-
 controls
-
 );
 
 document.addEventListener(
-
 "keydown",
-
 controls
-
 );
 
 animate();
 
 }
 
-
-
 function buildMachine(){
 
 const glass=
-
 new THREE.Mesh(
 
 new THREE.BoxGeometry(
-
 10,
-
 6,
-
 8
-
 ),
 
 new THREE.MeshPhongMaterial({
-
 transparent:true,
-
 opacity:0.15,
-
 color:0x88ccff
-
 })
 
 );
 
 glass.position.y=2;
-
-scene.add(
-glass
-);
-
+scene.add(glass);
 
 const floor=
-
-  
 new THREE.Mesh(
 
 new THREE.BoxGeometry(
-
 10,
-
 0.3,
-
 8
-
 ),
 
 new THREE.MeshPhongMaterial({
-
-color:0x333333
-
+color:0x111111
 })
 
 );
 
 floor.position.y=-1;
-
-scene.add(
-floor
-);
-
-
+scene.add(floor);
 
 claw=
-
 new THREE.Mesh(
 
 new THREE.BoxGeometry(
-
 0.8,
-
 0.5,
-
 0.8
-
 ),
 
 new THREE.MeshPhongMaterial({
-
 color:0xffffff
-
 })
 
 );
 
 claw.position.set(
-
 0,
-
 4,
-
 0
-
 );
 
-scene.add(
-claw
-);
-
-
+scene.add(claw);
 
 cable=
-
 new THREE.Line(
 
 new THREE.BufferGeometry(),
 
 new THREE.LineBasicMaterial({
-
 color:0xffffff
-
 })
 
 );
 
-scene.add(
-cable
-);
+scene.add(cable);
 
 }
-
-
 
 function makeGeometry(shape){
 
 if(shape==="box")
-return new THREE.BoxGeometry(.6,.6,.6);
+return new THREE.BoxGeometry(.7,.7,.7);
 
 if(shape==="sphere")
-return new THREE.SphereGeometry(.35);
+return new THREE.SphereGeometry(.4);
 
 if(shape==="cone")
-return new THREE.ConeGeometry(.35,.7);
+return new THREE.ConeGeometry(.4,.8);
 
 if(shape==="cylinder")
-return new THREE.CylinderGeometry(.2,.2,.7);
+return new THREE.CylinderGeometry(.25,.25,.8);
 
-return new THREE.OctahedronGeometry(.4);
+return new THREE.OctahedronGeometry(.5);
 
 }
-
-
 
 function spawnPrizes(){
 
@@ -334,25 +272,14 @@ prizes=[];
 for(let i=0;i<15;i++){
 
 const type=
-
 SCIENCE_TYPES[
-
 Math.floor(
-
-Math.random()
-
-*
-
+Math.random()*
 SCIENCE_TYPES.length
-
 )
-
 ];
 
-
-
 const mesh=
-
 new THREE.Mesh(
 
 makeGeometry(
@@ -360,216 +287,159 @@ type.shape
 ),
 
 new THREE.MeshPhongMaterial({
-
 color:type.color
-
 })
 
 );
 
-
-
 mesh.position.set(
-
 (Math.random()-0.5)*7,
-
 -0.5,
-
 (Math.random()-0.5)*5
-
 );
 
-
-
 mesh.userData={
-
 caught:false,
-
 type:type.name
-
 };
 
-
-
 scene.add(mesh);
-
 prizes.push(mesh);
 
 }
 
 }
 
-
-
 function controls(e){
 
-if(
-
-dropping ||
-
-rising
-
-){
-
+if(dropping||rising){
 return;
-
 }
 
+const speed=0.4;
+
 if(
-
-e.key==="ArrowLeft"
-
+e.key==="ArrowLeft" ||
+e.key==="a" ||
+e.key==="A"
 ){
-
-clawX-=0.5;
-
+clawX-=speed;
 }
 
 if(
-
-e.key==="ArrowRight"
-
+e.key==="ArrowRight" ||
+e.key==="d" ||
+e.key==="D"
 ){
-
-clawX+=0.5;
-
+clawX+=speed;
 }
 
-clawX=
-
-Math.max(
-
--4,
-
-Math.min(
-
-4,
-
-clawX
-
-)
-
-);
-
-claw.position.x=
-
-clawX;
+if(
+e.key==="ArrowUp" ||
+e.key==="w" ||
+e.key==="W"
+){
+clawZ-=speed;
+}
 
 if(
+e.key==="ArrowDown" ||
+e.key==="s" ||
+e.key==="S"
+){
+clawZ+=speed;
+}
 
-e.code==="Space"
+if(e.key==="1"){
+setCameraView("front");
+}
 
-||
+if(e.key==="2"){
+setCameraView("top");
+}
 
+if(e.key==="3"){
+setCameraView("side");
+}
+
+clawX=Math.max(-4,Math.min(4,clawX));
+clawZ=Math.max(-3,Math.min(3,clawZ));
+
+claw.position.x=clawX;
+claw.position.z=clawZ;
+
+if(
+e.code==="Space" ||
 e.key===" "
-
 ){
-
 dropClaw();
-
 }
 
 }
-
 
 function dropClaw(){
 
-if(
-
-player.credits<=0
-
-){
+if(player.credits<=0){
 
 failSound.currentTime=0;
-
 failSound.play();
 
 return;
-
 }
-
-
 
 player.credits--;
 
 updateHUD();
-
 saveLocal();
 
 dropping=true;
 
 }
 
-
-
 function checkGrab(){
 
-for(
+for(const p of prizes){
 
-const p of prizes
-
-){
-
-if(
-
-p.userData.caught
-
-) continue;
-
-
+if(p.userData.caught){
+continue;
+}
 
 const dx=
-
 Math.abs(
-
 p.position.x-
-
 claw.position.x
-
 );
 
-
+const dz=
+Math.abs(
+p.position.z-
+claw.position.z
+);
 
 const dy=
-
 Math.abs(
-
 p.position.y-
-
 claw.position.y
-
 );
 
-
-
 if(
-
-dx<0.7
-
-&&
-
+dx<0.7 &&
+dz<0.7 &&
 dy<0.7
-
 ){
-
 grabbedPrize=p;
-
 return;
-
 }
 
 }
 
 }
-
-
 
 function updateClaw(){
 
 if(dropping){
 
 clawY-=0.08;
-
 claw.position.y=clawY;
 
 checkGrab();
@@ -577,165 +447,155 @@ checkGrab();
 if(clawY<=-0.5){
 
 dropping=false;
-
 rising=true;
 
 }
 
 }
 
-
-
 if(rising){
 
 clawY+=0.08;
-
 claw.position.y=clawY;
-
-
 
 if(grabbedPrize){
 
 grabbedPrize.position.x=
-
 claw.position.x;
 
 grabbedPrize.position.y=
+claw.position.y-0.6;
 
-claw.position.y-.6;
+grabbedPrize.position.z=
+claw.position.z;
 
 }
-
-
 
 if(clawY>=4){
 
 clawY=4;
-
 rising=false;
-
-
 
 if(grabbedPrize){
 
 pickupSound.currentTime=0;
-
 pickupSound.play();
 
-shakeFrames=25;
+shakeFrames=20;
 
 player.prizes++;
 
-updateHUD();
+if(!player.collection){
+player.collection={};
+}
 
+const item=
+grabbedPrize.userData.type;
+
+player.collection[item]=
+(player.collection[item]||0)+1;
+
+updateHUD();
 saveLocal();
 
 grabbedPrize.userData.caught=true;
-
 grabbedPrize.visible=false;
 
 grabbedPrize=null;
 
-}
+checkCollectionAchievement();
 
 }
 
 }
 
-
+}
 
 cable.geometry.setFromPoints([
 
 new THREE.Vector3(
-
 claw.position.x,
-
 5,
-
-0
-
+claw.position.z
 ),
 
 new THREE.Vector3(
-
 claw.position.x,
-
 claw.position.y,
-
-0
-
+claw.position.z
 )
 
 ]);
 
 }
 
+function setCameraView(view){
 
+if(view==="front"){
+activeCamera=frontCamera;
+}
 
-function updateCamera(){
+if(view==="top"){
+activeCamera=topCamera;
+}
 
-camera.position.x =
-
-Math.sin(
-
-Date.now()*0.001
-
-)*0.6;
-
-
-
-if(
-
-shakeFrames>0
-
-){
-
-camera.position.x +=
-
-(Math.random()-0.5)*0.8;
-
-camera.position.y +=
-
-(Math.random()-0.5)*0.5;
-
-shakeFrames--;
+if(view==="side"){
+activeCamera=sideCamera;
+}
 
 }
 
+function updateCamera(){
 
+if(activeCamera===frontCamera){
 
-camera.lookAt(
+frontCamera.position.x=
+Math.sin(
+Date.now()*0.001
+)*0.5;
 
+frontCamera.lookAt(
 0,
-
 1,
-
 0
-
 );
 
 }
 
+if(activeCamera===topCamera){
 
+topCamera.lookAt(
+0,
+0,
+0
+);
+
+}
+
+if(activeCamera===sideCamera){
+
+sideCamera.lookAt(
+0,
+1,
+0
+);
+
+}
+
+}
 
 function animate(){
 
 requestAnimationFrame(
-
 animate
-
 );
 
 updateClaw();
-
 updateCamera();
 
 renderer.render(
-
 scene,
-
-camera
-
+activeCamera
 );
 
 }
@@ -745,63 +605,31 @@ function checkCollectionAchievement(){
 const items=[
 
 "Battery",
-
 "Atom",
-
 "Plant",
-
 "Magnet",
-
 "Crystal"
 
 ];
 
-
 let found=0;
 
-
-
-for(
-
-const item of items
-
-){
+for(const item of items){
 
 if(
-
 player.collection?.[item] > 0
-
 ){
-
 found++;
-
 }
 
 }
 
-
-
-if(
-
-found===items.length
-
-){
+if(found===items.length){
 
 alert(
-
 "🏆 Scientist Collection Completed!"
-
 );
 
 }
-
-}
-
-function setCameraView(view){
-
-console.log(
-"Camera View:",
-view
-);
 
 }
