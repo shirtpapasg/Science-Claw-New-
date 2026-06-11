@@ -365,6 +365,11 @@ Save Report
 
 <button onclick="resetPlayer()">
 Switch Player
+
+<button onclick="resetPlayer()">
+Switch Player
+  
+</button>
 </button>
 
 </div>
@@ -407,6 +412,47 @@ Question
 
 <button onclick="submitAnswer()">
 Submit Answer
+</button>
+
+</div>
+<div
+id="admin-modal"
+class="modal">
+
+<h2>
+Admin Panel
+</h2>
+
+<p>
+Science Facts JSON
+</p>
+
+<textarea
+id="admin-facts"
+style="
+width:100%;
+height:180px;
+">
+</textarea>
+
+<p>
+Question Bank JSON
+</p>
+
+<textarea
+id="admin-questions"
+style="
+width:100%;
+height:180px;
+">
+</textarea>
+
+<button onclick="saveAdminData()">
+Save
+</button>
+
+<button onclick="closeAdminPanel()">
+Close
 </button>
 
 </div>
