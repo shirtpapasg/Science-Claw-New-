@@ -4,7 +4,7 @@ function openAdminLogin(){
 
 const password = prompt(
 "Enter Admin Password"
-
+);
 
 if(password !== ADMIN_PASSWORD){
 
